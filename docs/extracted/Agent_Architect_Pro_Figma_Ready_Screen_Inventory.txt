@@ -1,0 +1,168 @@
+
+=== SHEET: README ===
+Agent Architect Pro — Figma-Ready Screen Inventory | 
+Structured inventory for Figma file setup, screen planning, reusable components, flows, and foundations. | 
+ | 
+Purpose | 
+Use this workbook as the source-of-truth inventory before building high-fidelity design files. It is optimized for a Figma workflow: clear screen IDs, route structure, states, reusable components, flow mappings, and a starter token system aligned to the product strategy. | 
+ | 
+Recommended Figma file structure | 
+00_Cover | Project title, version, owners, status, links to research/specs.
+01_Foundations | Color tokens, type scale, spacing, radius, elevation, iconography, grid rules.
+02_Global Components | App shell, navigation, chips, cards, tables, forms, drawers, modals, timeline, evidence modules.
+03_Core Flows | Low-fi and mid-fi flow frames for Create Agent, Evaluate, Deploy, Monitor, Govern.
+04_Screens | Production screen sets organized by product area and screen ID.
+05_Prototype | Primary clickable flow for stakeholder review.
+06_Archive | Deprecated concepts, prior exploration, design notes.
+ | 
+Naming and handoff rules | 
+• Use the exact Screen ID from the Screen_Inventory tab in each Figma frame title. | 
+• Name frames as: [Screen ID] – [Screen Name] – [State], e.g., STU-004 – Architecture Comparison – Default. | 
+• Keep one canonical component set; do not duplicate local variants unless the behavior genuinely differs. | 
+• Design light and dark mode only after the default light-mode flow is approved. | 
+• Every screen needs at least these states defined: default, loading, empty, error, and permission-limited where relevant. | 
+• For enterprise handoff, connect components to usage notes and data requirements, not just visuals. | 
+ | 
+ | 
+Priority legend | 
+P0 | Must design in first Figma sprint
+P1 | Needed soon after core flow approval
+P2 | Secondary / later release
+P3 | Future / optional
+
+=== SHEET: Screen_Inventory ===
+Screen Inventory |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Core screens, overlays, detail views, and states required to make the product Figma-ready. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Screen ID | Screen Name | Level | Product Area | Primary User | Journey Stage | Platform | Parent Route | Purpose | Key Modules | Primary Actions | Critical States | Reusable Components | Data Dependencies | Priority | Figma Section | Notes
+APP-001 | Home Dashboard | Global | Home | All roles | Orient | Desktop | /home | Command-center overview of recent agents, active work, approvals, alerts, and health. | Recent agents, active runs, approvals queue, release health, alerts, quick actions | Resume work; create agent; open alert | Default; loading; empty; alert-heavy; permission-limited | App shell, KPI cards, activity list, alert rail, quick action cards | Recent agents, active runs, approvals, deployment summaries | P0 | 04_Screens/Home | Keep calm and clean; summary-first, not a dense BI dashboard.
+APP-002 | Global Command Palette | Overlay | Global | All roles | Navigate | Desktop | Global | Fast command and search surface for navigation and actions. | Unified search, quick actions, recent destinations | Search; jump; create; deploy; inspect | Closed; open; no results; keyboard-only | Command input, result list, shortcut chips | Navigation index, entities, saved items | P0 | 02_Global Components/Overlays | Design keyboard-first and lightweight.
+APP-003 | Notifications Center | Overlay | Global | All roles | Monitor | Desktop | Global | Unified inbox for alerts, approvals, failures, and mentions. | Alert feed, filters, status markers | Open item; snooze; acknowledge | Unread; all read; severity filtered; error loading | Notification list, filter chips, severity badges | Events, alerts, approvals, mentions | P1 | 04_Screens/Home | Use severity and actionability, not just chronology.
+STU-001 | Create Agent – Goal Intake | Workspace | Studio | Agent Builder | Brief | Desktop | /studio/new | Convert a plain-language request into a structured intake. | Goal input, domain, constraints, success criteria, risk level | Start brief; save draft; ask follow-up | Default; guided follow-up; validation error; saved draft | Stepper, structured form, AI assist panel, inline helper text | User inputs, templates, prior briefs | P0 | 04_Screens/Studio | Avoid chat-only layout; make it feel like premium structured intake.
+STU-002 | Brief Builder | Workspace | Studio | Agent Builder | Brief | Desktop | /studio/brief | Editable structured brief with requirements, tools, knowledge, risk and approvals. | Brief sections, editable summary, AI suggestions | Edit; approve brief; generate architectures | Default; incomplete; ready-to-generate; conflict warning | Document editor, summary cards, suggestion panel | Requirement summary, tool candidates, risk settings | P0 | 04_Screens/Studio | This is the gateway into architecture generation.
+STU-003 | Research Summary | Workspace | Studio | Agent Builder | Design | Desktop | /studio/research | Explain retrieved domain evidence and assumptions before design choices. | Source evidence, assumption list, citations, gaps | Review evidence; mark missing; continue | Default; source gap; low confidence; no evidence | Evidence cards, source table, confidence badge | Retrieved documents, source metadata | P1 | 04_Screens/Studio | Useful bridge between brief and design.
+STU-004 | Architecture Comparison Board | Workspace | Studio | Agent Builder | Compare | Desktop | /studio/architectures | Side-by-side comparison of architecture candidates and tradeoffs. | Candidate cards, score pillars, rationale, risk matrix | Select candidate; request revision; compare diff | Default; recommended; tied; missing metrics | Comparison cards, score badges, diff table, CTA bar | Candidate architectures, scores, rationales | P0 | 04_Screens/Studio | Decision-making screen; needs disciplined hierarchy.
+STU-005 | Architecture Canvas | Detail | Studio | Agent Builder / Engineer | Design | Desktop | /studio/architectures/:id | Node-and-panel view of one candidate architecture. | Component graph, side panel, flow summary, version tags | Inspect node; edit; annotate; open evidence | Default; selected node; collapsed graph; unavailable node detail | Graph nodes, side sheet, breadcrumbs, tabs | Architecture graph, node metadata, lineage | P0 | 04_Screens/Studio | Graph is secondary to understanding; support readable summaries.
+STU-006 | Debate Review | Detail | Studio | Builder / Governance | Compare | Desktop | /studio/debate | Structured review of proposal, critique, revision, and final recommendation. | Proposal lane, critique lane, revision lane, evidence panel | Expand critique; accept revision; open evidence | Default; filtered by round; long rationale; evidence missing | Timeline, argument cards, evidence drawer | Debate rounds, evidence refs, recommendation | P1 | 04_Screens/Studio | Do not present as raw transcript-first.
+STU-007 | Tools & Permissions Config | Workspace | Studio | Builder / Governance | Configure | Desktop | /studio/tools | Configure tool access, permissions, and approval rules. | Tool catalog, permissions matrix, risk labels | Allow tool; restrict; require approval | Default; restricted; warning; no tools connected | Data table, toggle rows, policy chips, warning banners | Tool catalog, policy profile, tenant limits | P0 | 04_Screens/Studio | Very explicit, no hidden side effects.
+STU-008 | Memory & Retrieval Config | Workspace | Studio | Builder / Engineer | Configure | Desktop | /studio/memory | Define retrieval mode, source groups, episodic memory behavior, and context rules. | Source groups, retrieval policy, retention settings | Add source; tune retrieval; preview memory plan | Default; source empty; low coverage; policy conflict | Config cards, selector chips, source list, preview pane | Knowledge sources, retrieval settings, memory policy | P0 | 04_Screens/Studio | Clarify difference between retrieval, episodic memory, and runtime context.
+STU-009 | Evaluation Lab Overview | Workspace | Studio | Engineer / Governance | Evaluate | Desktop | /studio/evaluation | High-level view of benchmark, scenario, safety, and regression results. | Verdict banner, benchmark summary, scenario list, recommendation | Approve; block; inspect failures | Pass; caution; fail; incomplete; rerun in progress | Verdict module, charts, section tabs, recommendation panel | Evaluation results, thresholds, previous baseline | P0 | 04_Screens/Evaluation | Three-layer model: summary, grouped failures, raw evidence.
+STU-010 | Evaluation Failure Detail | Detail | Studio | Engineer | Evaluate | Desktop | /studio/evaluation/failures/:id | Detailed failure case for one scenario or benchmark. | Failure summary, root-cause clues, evidence trace, remediation | Inspect trace; assign fix; compare to baseline | Default; no trace; repeated issue; resolved | Failure card, trace link, comparison callout | Failure case, logs, traces, tool calls | P1 | 04_Screens/Evaluation | Designed for debugging and learning, not blame.
+STU-011 | Scenario Simulation Review | Detail | Studio | Engineer / Governance | Evaluate | Desktop | /studio/simulations/:id | Review synthetic scenarios and world-model predictions. | Scenario metadata, expected outcome, observed outcome, weak spots | Open scenario; compare variants; send back for revision | Default; high-risk scenario; incomplete run | Scenario cards, outcome table, severity tags | Scenario pack, simulation results | P1 | 04_Screens/Evaluation | Keep synthetic-vs-live distinction visible.
+STU-012 | Release Readiness | Workspace | Studio | Builder / Governance | Approve | Desktop | /studio/release | Pre-deployment summary of changes, evidence, approvals, and unresolved risks. | Release checklist, change summary, signatures, blockers | Request approval; resolve blocker; package release | Ready; blocked; missing evidence; approved | Checklist, summary cards, blocker list, sign-off panel | Version diff, eval report, policy checks | P0 | 04_Screens/Release | This is the airlock between design and production.
+RUN-001 | Runs Explorer | Workspace | Runs | Engineer / Operator | Monitor | Desktop | /runs | Explore all active and historical runs across agents and environments. | Runs table, filters, status chips, saved views | Open run; filter; export; save view | Default; empty; high-volume; failed query | Data table, filter bar, search, status chips | Run records, environment, owner, outcome | P1 | 04_Screens/Runs | Needs strong filter usability.
+RUN-002 | Run Detail Timeline | Detail | Runs | Engineer / Operator | Monitor | Desktop | /runs/:id | Time-ordered view of run events, task transitions, model/tool activity, and decisions. | Timeline, task tree, summary rail | Inspect event; jump to trace; open artifact | Default; long run; failed run; partial permissions | Timeline rows, event tags, sticky summary rail | Run events, task statuses, artifacts | P0 | 04_Screens/Runs | Make causality easy to follow.
+RUN-003 | Trace & Tool Inspector | Detail | Runs | Engineer / Operator | Diagnose | Desktop | /runs/:id/trace | Correlated trace, tool calls, and latency view for debugging. | Latency waterfall, tool call list, payload detail, correlated logs | Inspect tool call; jump to log; compare attempts | Default; large trace; redacted payload; timeout | Trace waterfall, drawers, code block, tabs | Trace spans, tool calls, logs, redaction rules | P0 | 04_Screens/Runs | Most technical screen; still needs progressive disclosure.
+KNO-001 | Knowledge Explorer | Workspace | Knowledge | Builder / Engineer | Configure | Desktop | /knowledge | Browse sources, templates, indexed docs, and reusable artifacts. | Source groups, search, metadata table, preview | Search source; open source; attach to agent | Default; empty repo; stale source warning | Search bar, source cards, metadata table, preview panel | Source index, artifacts, freshness metadata | P1 | 04_Screens/Knowledge | Should feel like curated workspace, not a file dump.
+KNO-002 | Source Detail & Index Status | Detail | Knowledge | Engineer | Configure | Desktop | /knowledge/sources/:id | Inspect one source, indexing health, permissions, and retrieval quality indicators. | Index status, permissions, chunks, errors, usage | Reindex; disable; view chunks | Healthy; stale; failed index; permission error | Status cards, logs panel, tabs | Source metadata, chunk stats, index jobs | P2 | 04_Screens/Knowledge | Good for platform maturity phase.
+DEP-001 | Deployment Center | Workspace | Deployments | Engineer / Governance | Deploy | Desktop | /deployments | Manage versions, environments, rollout plans, and rollback controls. | Environment cards, version list, rollout controls, health summary | Promote; rollback; open diff; open canary | Default; canary active; rollout blocked; degraded | Environment cards, version table, CTA rail | Version catalog, env health, deploy status | P0 | 04_Screens/Deployments | Release confidence and reversibility matter most.
+DEP-002 | Canary Rollout Monitor | Detail | Deployments | Engineer / Operator | Deploy | Desktop | /deployments/canary/:id | Monitor canary performance vs baseline during rollout. | Delta charts, failure counts, confidence status, rollback CTA | Continue rollout; pause; rollback | Healthy; borderline; degraded; rollback complete | Delta chart, comparison cards, CTA bar | Baseline metrics, canary metrics, thresholds | P1 | 04_Screens/Deployments | Show relative change, not just raw metrics.
+DEP-003 | Version Diff | Detail | Deployments | Engineer / Governance | Approve | Desktop | /deployments/versions/:a...:b | Explain exactly what changed between two versions. | Changed prompts, tools, memory, model policy, eval delta | Review diff; acknowledge risk; attach note | Default; many changes; missing evidence | Diff table, grouped change cards, side-by-side panes | Version manifests, policy bundles, eval comparisons | P0 | 04_Screens/Deployments | Critical for trust and approvals.
+OBS-001 | Observability Console | Workspace | Observability | Operator / Engineer | Diagnose | Desktop | /observability | Unified metrics, logs, traces, tool usage, model usage, and cost trends. | Metrics charts, logs stream, trace search, cost view | Filter; save view; open trace; correlate event | Default; incident mode; empty query; access-limited | Tabbed console, filters, charts, tables, drawers | Metrics, logs, spans, cost records | P1 | 04_Screens/Observability | Default view should stay readable, not noisy.
+GOV-001 | Governance Queue | Workspace | Governance | Governance Owner | Approve | Desktop | /governance | Queue of approvals, policy violations, blocked releases, and review tasks. | Approval list, policy status, owners, due dates | Open packet; assign reviewer; approve/block | Default; SLA breach; empty queue | Queue table, owner chips, due badges | Approvals, policy checks, reviewers | P1 | 04_Screens/Governance | Formal and structured.
+GOV-002 | Approval Packet | Detail | Governance | Governance Owner | Approve | Desktop | /governance/approvals/:id | Single-pane review packet for release approval. | Executive summary, evidence, risks, signatures, actions | Approve; reject; request changes | Ready; missing evidence; blocked; approved | Approval summary, evidence accordion, sign-off panel | Eval report, version diff, policy status, audit links | P0 | 04_Screens/Governance | This is where trust becomes a decision.
+GOV-003 | Audit Timeline | Detail | Governance | Governance / Operator | Audit | Desktop | /governance/audit/:id | Chronological audit view of identity, policy, actions, and release events. | Audit events, actors, hashes, related records | Filter; export; jump to run | Default; long history; redacted record | Timeline, event badges, metadata drawer | Audit records, identity events, signatures | P1 | 04_Screens/Governance | Needs strong export and filtering.
+EXE-001 | Executive Portfolio | Workspace | Executive | Executive Sponsor | Review | Desktop | /executive | Portfolio-level view of production agents, outcomes, quality trends, and risk. | KPI strip, portfolio cards, trend charts, risk summary | Open portfolio; drill into agent; export snapshot | Default; summary only; alert state | KPI cards, trend charts, portfolio list | Aggregated program data, business KPIs, quality metrics | P2 | 04_Screens/Executive | Plain-English first; minimal jargon.
+SET-001 | Settings & Policy Profiles | Workspace | Settings | Admin / Governance | Configure | Desktop | /settings | Manage workspace settings, policy presets, notifications, and integrations. | Profile list, policy presets, access control, connectors | Edit policy; manage roles; connect source | Default; restricted; unsaved changes | Tabs, forms, table rows, save bar | Workspace config, roles, policy presets, connectors | P2 | 04_Screens/Settings | Keep admin complexity isolated from core flows.
+
+=== SHEET: Flow_Map ===
+Flow Map |  |  |  |  |  |  |  | 
+Primary product flows, step-by-step screen mapping, and success outcomes for prototype planning. |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  | 
+Flow ID | Flow Name | Step # | From Screen | To Screen | User Intent | Outcome / Success State | Prototype Priority | Notes
+FL-01 | Create a new agent | 1 | APP-001 | STU-001 | Start from Home and create a new agent | Goal intake launched | P0 | Entry via command bar or Home CTA.
+FL-01 | Create a new agent | 2 | STU-001 | STU-002 | Convert natural-language goal into structured brief | Brief drafted and editable | P0 | Use guided follow-up rather than open chat only.
+FL-01 | Create a new agent | 3 | STU-002 | STU-003 | Review supporting research and assumptions | Evidence accepted or gaps flagged | P1 | Optional but recommended step.
+FL-01 | Create a new agent | 4 | STU-003 | STU-004 | Generate and compare architecture candidates | Decision-ready candidate set | P0 | Comparison is a first-class flow.
+FL-01 | Create a new agent | 5 | STU-004 | STU-005 | Inspect chosen architecture in more detail | Candidate understood and refined | P0 | Open canvas or node details.
+FL-01 | Create a new agent | 6 | STU-005 | STU-007 | Confirm tools and permissions | Tool policy accepted | P0 | Surface risk early.
+FL-01 | Create a new agent | 7 | STU-007 | STU-008 | Configure knowledge and memory behavior | Retrieval/memory design accepted | P0 | Keep semantics clear.
+FL-01 | Create a new agent | 8 | STU-008 | STU-009 | Run evaluation before release request | Initial quality verdict produced | P0 | Must precede release.
+FL-01 | Create a new agent | 9 | STU-009 | STU-012 | Package release request with evidence | Release-ready packet created | P0 | Airlock moment before approval.
+FL-02 | Compare and choose architecture | 1 | STU-002 | STU-004 | Generate candidate options | Candidates available | P0 | Fast branch from brief.
+FL-02 | Compare and choose architecture | 2 | STU-004 | STU-006 | Review rationale, critiques, and debate | Tradeoffs understood | P1 | Supports trust and explainability.
+FL-02 | Compare and choose architecture | 3 | STU-006 | STU-005 | Inspect one finalist in detail | Final candidate selected | P0 | Canvas should be readable.
+FL-03 | Evaluate and approve candidate | 1 | STU-005 | STU-009 | Open evaluation results | Verdict visible | P0 | Summary-first.
+FL-03 | Evaluate and approve candidate | 2 | STU-009 | STU-010 | Inspect one failed scenario or benchmark | Root cause understood | P1 | Engineering detail view.
+FL-03 | Evaluate and approve candidate | 3 | STU-009 | STU-011 | Review simulated scenarios | Risk profile understood | P1 | Synthetic/live distinction visible.
+FL-03 | Evaluate and approve candidate | 4 | STU-009 | STU-012 | Prepare release packet | Evidence complete | P0 | No deploy without evidence.
+FL-03 | Evaluate and approve candidate | 5 | STU-012 | GOV-002 | Submit for approval | Approval packet opened | P0 | Governance handoff.
+FL-04 | Deploy and monitor canary | 1 | GOV-002 | DEP-001 | Approved release moves to deployment | Deployment center in ready state | P0 | Approval drives deployment.
+FL-04 | Deploy and monitor canary | 2 | DEP-001 | DEP-002 | Start canary and monitor health vs baseline | Canary status visible | P0 | Relative delta matters.
+FL-04 | Deploy and monitor canary | 3 | DEP-002 | RUN-002 | Drill into a suspicious run | Incident traceable | P1 | Operational debug path.
+FL-04 | Deploy and monitor canary | 4 | DEP-002 | DEP-001 | Promote or roll back | Version promoted or reversed | P0 | Fast rollback essential.
+FL-05 | Investigate runtime failure | 1 | APP-003 | RUN-002 | Open a failing run from notification | Timeline focused on failing run | P0 | Common operational entry.
+FL-05 | Investigate runtime failure | 2 | RUN-002 | RUN-003 | Inspect trace and tool behavior | Failure mode isolated | P0 | Most technical flow.
+FL-05 | Investigate runtime failure | 3 | RUN-003 | OBS-001 | Correlate with broader metrics or logs | System context understood | P1 | Cross-navigation should preserve filters.
+FL-05 | Investigate runtime failure | 4 | OBS-001 | DEP-003 | Check if a recent version change caused issue | Change cause confirmed or ruled out | P1 | Trust hinges on quick diffs.
+FL-06 | Governance approval | 1 | GOV-001 | GOV-002 | Open an approval request | Packet in review | P0 | Queue to packet.
+FL-06 | Governance approval | 2 | GOV-002 | DEP-003 | Inspect exact version changes | Change risk understood | P0 | Most requested supporting view.
+FL-06 | Governance approval | 3 | GOV-002 | GOV-003 | Inspect audit timeline | Actor and evidence lineage understood | P1 | Supports defensibility.
+FL-06 | Governance approval | 4 | GOV-002 | DEP-001 | Approve and release to deployment | Release authorized | P0 | Formal sign-off state.
+
+=== SHEET: Component_Inventory ===
+Component Inventory |  |  |  |  |  |  |  | 
+Reusable UI building blocks, variants, behaviors, and Figma component guidance. |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  | 
+Component ID | Component Name | Category | Variants / States | Primary Usage | Used In Screens | Behavior Notes | Figma Guidance | Priority
+CMP-001 | App Shell | Layout | Default; collapsed nav; expanded nav; dense mode | Global navigation and page framing | APP-001, all workspaces | Supports workspace nav, page title, global actions | Create as shell with slots for left nav, top bar, content area | P0
+CMP-002 | Global Command Bar | Input | Idle; focused; results; no results; keyboard help | Universal search and quick actions | APP-002 | Keyboard-first with result grouping | Create interactive component with overlay state | P0
+CMP-003 | Status Chip | Feedback | Neutral; info; success; warning; critical; blocked | States for runs, approvals, releases, health | Most screens | Color + icon + text; never color alone | Build semantic variants with consistent tokens | P0
+CMP-004 | KPI Card | Data display | Default; with trend; with alert; compact | Home and Executive summaries | APP-001, EXE-001 | Can include delta and confidence note | Provide 2 heights and optional sparkline slot | P0
+CMP-005 | Quick Action Card | Action | Default; hover; disabled | Home shortcuts and task starts | APP-001 | Short label + subtext + icon | Make simple but consistent | P1
+CMP-006 | Stepper / Journey Rail | Navigation | Default; active; complete; blocked | Studio flow progression | STU-001 to STU-012 | Must support long step labels | Use vertical and horizontal variants | P0
+CMP-007 | Evidence Card | Content | Default; selected; warning; missing source | Research, debate, evaluation evidence | STU-003, STU-006, GOV-002 | Citations and confidence matter | Support tags, source link, summary, confidence | P0
+CMP-008 | Comparison Card | Decision | Default; recommended; selected; caution | Architecture candidate comparison | STU-004 | Should hold scores, rationale, CTA | Design for side-by-side widths | P0
+CMP-009 | Graph Node | Visualization | Default; selected; warning; disabled | Architecture canvas nodes | STU-005 | Need semantic types and connection rules | Use auto-layout-friendly node patterns | P0
+CMP-010 | Side Panel / Drawer | Overlay | Closed; open; pinned | Contextual detail across product | STU-005, RUN-003, GOV-003 | Helps progressive disclosure | Keep reusable across domains | P0
+CMP-011 | Data Table | Data display | Default; sortable; filtered; empty; loading | Runs, queue, source lists, versions | RUN-001, GOV-001, DEP-001 | Enterprise tables must scale | Design header, filter, bulk action states | P0
+CMP-012 | Filter Bar | Navigation | Default; active filters; saved view | Exploration and observability views | RUN-001, OBS-001, KNO-001 | Use tokens and removable chips | Support compound filters cleanly | P0
+CMP-013 | Timeline Row | Data display | Default; expanded; alert; selected | Run timeline and audit trail | RUN-002, GOV-003 | Sequence clarity is key | Needs icon, timestamp, actor, event, expand state | P0
+CMP-014 | Trace Waterfall | Visualization | Default; selected span; error span | Detailed performance/trace analysis | RUN-003 | Technical but readable | Provide zoom and linked detail behavior | P1
+CMP-015 | Verdict Banner | Feedback | Pass; caution; fail; in progress | Evaluation summary and release readiness | STU-009, STU-012 | Needs strong hierarchy | Use semantic variants with concise text rules | P0
+CMP-016 | Checklist Panel | Workflow | Ready; blocked; partial; approved | Release readiness and approval | STU-012, GOV-002 | Support evidence links per item | Component should allow status per line item | P0
+CMP-017 | Diff Block | Comparison | Inline diff; grouped diff; side-by-side | Version and policy change review | DEP-003 | Highlight changed scope not noise | Create text and structured row variants | P0
+CMP-018 | Risk Banner | Feedback | Info; caution; critical | Policy and safety warnings | Studio, Governance, Deployments | Needs CTA for next step | Use persistent style across product | P1
+CMP-019 | Source Card | Content | Healthy; stale; failed; restricted | Knowledge assets and indexing views | KNO-001, KNO-002 | Health and freshness must be visible | Should pair with status chip and metadata | P1
+CMP-020 | Approval Action Bar | Workflow | Pending; ready; blocked; signed | Final governance actions | GOV-002 | Anchors approve/reject/request-change actions | Sticky footer or side rail variant | P0
+
+=== SHEET: Design_Tokens ===
+Design Tokens |  |  |  | 
+Starter token inventory for the first Figma foundations file. Values are directional and ready to refine during visual design. |  |  |  | 
+ |  |  |  | 
+Group | Token | Suggested Value | Usage | Notes
+Color | bg/default | #F7F9FC | Primary app background | Keep neutral and calm.
+Color | bg/surface | #FFFFFF | Cards, panels, modals | Use slight layering with border/shadow.
+Color | bg/subtle | #EDF4FA | Selected rows, quiet highlights | Good for supportive emphasis.
+Color | text/primary | #1F2937 | Main body text | High contrast, readable.
+Color | text/secondary | #4B5563 | Secondary labels and metadata | Avoid low-contrast gray.
+Color | brand/primary | #3B5CCC | Primary actions and AI system accents | Use sparingly but consistently.
+Color | brand/deep | #1F4E79 | Headers, high-trust accents | Works well in enterprise surfaces.
+Color | state/success | #2E7D32 | Healthy, pass, approved | Pair with icon and label.
+Color | state/warning | #B7791F | Caution, review required | Should not feel catastrophic.
+Color | state/error | #C0392B | Failed, blocked, degraded | Use selectively.
+Color | state/info | #2F75B5 | Information and neutral progress | Good for links and active tabs.
+Color | state/risk-fill | #FCE4D6 | Critical background fill | Use in banners, not large surfaces.
+Typography | type/display/1 | 32 / 40 semibold | Page-level hero or executive title | Use rarely.
+Typography | type/heading/1 | 24 / 32 semibold | Primary page headings | Strong but restrained.
+Typography | type/heading/2 | 20 / 28 semibold | Section headings | Most common workspace heading.
+Typography | type/body/1 | 14 / 20 regular | Standard body text | Core readable size.
+Typography | type/body/2 | 13 / 18 regular | Dense enterprise content | Use in tables or metadata.
+Typography | type/label | 12 / 16 medium | Labels, chips, control captions | Should remain legible.
+Spacing | space/1 | 4 | Micro spacing | Tokenize spacing to keep consistency.
+Spacing | space/2 | 8 | Small gaps | 
+Spacing | space/3 | 12 | Compact component spacing | 
+Spacing | space/4 | 16 | Default internal spacing | 
+Spacing | space/5 | 24 | Section spacing | 
+Spacing | space/6 | 32 | Large layout spacing | 
+Radius | radius/sm | 6 | Inputs, chips | 
+Radius | radius/md | 10 | Cards, drawers | Prefer consistent medium softness.
+Radius | radius/lg | 14 | Large panels or hero cards | Use sparingly.
+Elevation | shadow/sm | 0 1 2 / 8% | Cards at rest | Keep subtle.
+Elevation | shadow/md | 0 6 16 / 10% | Open drawers and modals | 
+Grid | desktop/max-width | 1440 | Primary desktop frame | Use 12-column grid.
+Grid | desktop/columns | 12 | Core layout grid | 
+Grid | desktop/gutter | 24 | Grid gutter | 
+Iconography | icon/style | Outlined + selective fill | Navigation and status support | Match enterprise tone, not playful.
+Motion | motion/fast | 120ms ease-out | Hover and quick feedback | Reduce motion in dense views.
+Motion | motion/standard | 180ms ease-out | Panels, tabs, overlays | Avoid decorative animation.

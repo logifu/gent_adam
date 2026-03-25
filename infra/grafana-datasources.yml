@@ -1,0 +1,44 @@
+# ── Grafana Provisioning: Datasources ─────────────────────
+apiVersion: 1
+
+datasources:
+  # Prometheus — metrics from all services
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: "15s"
+
+  # Loki — centralized log aggregation
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: true
+    jsonData:
+      derivedFields:
+        - datasourceUid: tempo
+          matcherRegex: trace_id=(\w+)
+          name: TraceID
+          url: "$${__value.raw}"
+
+  # Tempo — distributed tracing
+  - name: Tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    uid: tempo
+    editable: true
+    jsonData:
+      tracesToLogs:
+        datasourceUid: loki
+        tags: ["service.name"]
+        filterByTraceID: true
+      tracesToMetrics:
+        datasourceUid: prometheus
+        tags: ["service.name"]
+      serviceMap:
+        datasourceUid: prometheus

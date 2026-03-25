@@ -1,0 +1,210 @@
+Agent Architect Pro — UI/UX Product Specification
+Researched and evaluated recommendation for a modern enterprise AI agent design and operations platform.
+
+Prepared from: the uploaded project blueprint and architecture materials, plus current human-AI and complex-application UX guidance from Microsoft HAX, Google PAIR, Nielsen Norman Group, and IBM. Source appendix at the end.
+
+1. Executive summary
+Agent Architect Pro is not a single-purpose app. It is a multi-role platform for specifying, generating, evaluating, deploying, observing, and improving AI agents. Because the project combines agent design, retrieval, debate, simulation, runtime operations, governance, and observability, the correct UX expression is a lifecycle-driven studio with role-aware entry points—not a generic cloud dashboard and not a chat-only interface.
+
+2. Inputs, assumptions, and design objectives
+• The project requirements define a product that can intake requirements, research a domain, generate agent architectures, configure prompts/tools/memory, run evaluation and simulation, deploy agents, observe runtime behavior, and continuously improve them.
+• The architecture materials add the operational layers required for trust at scale: control plane, execution plane, knowledge plane, trust plane, improvement plane, and operations plane.
+• The product therefore needs to support at least four user types: builder, engineer/operator, governance owner, and executive sponsor.
+• The UI must reduce cognitive load while preserving deep traceability for high-consequence review and debugging.
+
+3. Evaluated product directions
+
+Why direction D suits this project best
+• The project begins with a goal and ends with a deployed, governed agent. A lifecycle model mirrors that user mental model directly.
+• The architecture is multi-plane and multi-role. Role-aware modes let the same platform feel relevant to builders, operators, and executives.
+• The platform creates alternatives, critiques, evaluations, and versions. A studio model makes comparison and review first-class rather than incidental.
+• Governance and observability are essential, but they are not the starting point for every user. Lifecycle navigation keeps the product approachable without hiding control.
+4. Personas and jobs to be done
+
+5. Information architecture and navigation model
+
+
+Agent-level navigation
+• Overview
+• Brief
+• Design
+• Evaluation
+• Versions
+• Runtime
+• Audit
+6. Primary workflows
+Workflow 1 — Create a new agent
+• Start from a plain-language goal.
+• Guide the user through follow-up questions and constraints.
+• Generate a structured brief that can be edited and approved.
+• Produce multiple architecture candidates with tradeoff summaries.
+• Select or merge a direction, then auto-generate an evaluation plan.
+• Require evidence before release readiness is shown.
+Workflow 2 — Compare architecture candidates
+• Present 2–4 candidate architectures side by side.
+• Summarize expected quality, safety, maintainability, latency, and cost.
+• Expose “why this was chosen” and “what risks remain” at a glance.
+• Allow deeper review through critique, rationale, and diff views.
+Workflow 3 — Evaluate, approve, and release
+• Show an overall verdict first, then group failures by severity and theme.
+• Connect issues to scenarios, traces, and tool/model evidence.
+• Require an approval packet with change summary, policy status, and rollback confidence.
+• Make canary release and rollback controls visible and unambiguous.
+Workflow 4 — Monitor and improve
+• Expose health, latency, quality, tool usage, human handoff, and policy issues on one runtime overview.
+• Allow drill-down from a portfolio or status card to a single run or trace.
+• Feed recurring failures back into evaluation and design review rather than leaving them as raw telemetry.
+7. Key screens and wireframe strategy
+
+
+7. Key screens and wireframe strategy (continued)
+
+8. Interaction model and design system direction
+Core interaction patterns
+• Global command bar for navigation and power actions.
+• Split-view compare for candidate architectures, versions, and baseline-vs-canary review.
+• Timeline + graph pairing for temporal and structural understanding.
+• Persistent right-side context panel for recommendations, warnings, and next actions.
+• Status chips everywhere: Draft, In Review, Simulated, Eval Failed, Ready for Approval, Canary, Live, Degraded, Rolled Back.
+• Explainability ladder: summary → rationale → evidence → raw trace.
+Visual design direction
+• Tone: premium, calm, precise, trustworthy, enterprise-ready.
+• Palette: neutral foundation with one intelligent accent such as indigo or electric blue; semantic colors for success, caution, and risk.
+• Density: comfortable mode for Studio and Executive; compact mode for Observability and Governance.
+• Component language: structured cards, score badges, segmented controls, evidence accordions, comparison cards, timeline rows, graph nodes, and side sheets.
+• Avoid sci-fi styling, neon-heavy palettes, and playful consumer-app tropes.
+
+9. Content design, accessibility, and trust mechanics
+Content design rules
+• Say what happened, why it matters, and what the user can do next.
+• Prefer plain-English summaries before technical detail.
+• When uncertainty is material, say so clearly instead of implying certainty.
+Accessibility requirements
+• WCAG-compliant contrast and focus states.
+• Keyboard-first navigation across all major workflows.
+• No status communicated by color alone.
+• Accessible tables, charts, and graph views.
+• Reduced motion support and screen-reader-friendly labels for critical controls.
+Trust mechanics to make visible in the UI
+• Why the system selected a candidate or took an action.
+• How much confidence or uncertainty is attached to an output.
+• What data, tools, or policies influenced a result.
+• What changed between one version and the next.
+• What fallback or human-handoff path exists if the system is wrong.
+10. Research basis and implications for this product
+
+11. MVP, roadmap, and validation plan
+MVP screens for the first serious release
+• Home
+• Brief Builder
+• Agent Studio
+• Architecture Comparison
+• Evaluation Lab
+• Release Center
+• Runtime Overview
+Phase roadmap
+
+Validation plan
+• Run task-based usability testing separately for builders, operators, and governance reviewers.
+• Test comprehension of architecture comparison, evaluation verdicts, and release packets.
+• Measure time-to-first-viable-agent, approval confidence, error recovery rate, and speed of root cause identification.
+• Run progressive-disclosure tests to confirm that summary-first views help non-experts without slowing experts down.
+12. Open questions before wireframing
+• Which user group is the day-one economic buyer: builder, platform team, or governance-led enterprise program?
+• Will the first release focus on one vertical or stay domain-general?
+• How much direct manual editing of prompts, tools, and memory should be exposed in v1?
+• Which release approvals are mandatory versus advisory?
+• What level of trace visibility is acceptable for non-technical users?
+
+Appendix A. Source pack
+Internal project sources
+• Unified project blueprint and requirements notes supplied in the conversation.
+• v8.1 architecture materials and component definitions created earlier in this project thread.
+External research references used to shape the recommendation
+• [R1] Microsoft HAX Toolkit — Guidelines for Human-AI Interaction.
+• [R2] Google PAIR Guidebook — Explainability + Trust.
+• [R3] Google PAIR Guidebook — Design AI feedback loops.
+• [R4] Nielsen Norman Group — 8 Design Guidelines for Complex Applications.
+• [R5] Nielsen Norman Group — Few Guesses, More Success: 4 Principles to Reduce Cognitive Load in Forms.
+• [R6] Nielsen Norman Group — Error-Message Guidelines.
+• [R7] IBM — Why observability is essential for AI agents.
+
+--- TABLE 1 ---
+Recommendation: build the product as an AI-native lifecycle studio — Brief → Design → Compare → Evaluate → Approve → Deploy → Monitor → Improve — rather than as a generic dashboard or chat-first tool.
+
+--- TABLE 2 ---
+North-star product expression
+Agent Architect Pro should feel like a hybrid of an expert design studio, a release control center, and an AI operations console. The user should always be able to answer six questions quickly: What is this agent for? Why was this design chosen? What changed? Is it safe? Is it working? What should I do next?
+
+--- TABLE 3 ---
+Design objectives
+1) Make complexity understandable. 2) Calibrate trust appropriately. 3) Keep release decisions evidence-based. 4) Give operators precise observability. 5) Let non-engineers participate without drowning in implementation detail.
+
+--- TABLE 4 ---
+Direction | Strengths | Weaknesses | Verdict
+A. Dashboard-first control panel | Fast to build; familiar to platform teams; good for monitoring and deployments. | Over-centers operations, under-serves agent creation, architecture comparison, and trust-building for non-engineers. | Reject as primary model. Keep only for Ops surfaces.
+B. Chat-first copilot workspace | Natural intake; low-friction ideation; good for requirement gathering. | Weak for side-by-side comparison, governance, versioning, observability, and structured release review. | Useful inside the product, not as the whole product.
+C. Node-graph builder as the main UI | Strong for technical users; good for architecture inspection and dependencies. | Too implementation-centric too early; poor starting point for new users and product sponsors. | Keep as a secondary design view.
+D. Lifecycle studio with role-aware modes | Fits the end-to-end lifecycle, supports multiple roles, enables progressive disclosure, and aligns well with design, evaluation, release, and runtime workflows. | Requires disciplined IA and role defaults to avoid feeling broad. | Recommended direction.
+
+--- TABLE 5 ---
+Persona | Primary goals | What they need from the UI | Success signal
+Agent Builder | Turn a business or operational problem into a capable agent. | Structured brief intake, candidate architectures, editable tools/memory, understandable rationale, evaluation guidance. | Can move from vague goal to approved design confidently.
+ML / Platform Engineer | Make agents robust, observable, and release-safe. | Runtime health, traces, version diffs, model/tool usage, evaluation evidence, deployment controls. | Can debug and improve without losing provenance.
+Governance / Risk Owner | Approve or block changes based on evidence. | Policy visibility, audit trails, risk summaries, unresolved issues, sign-off workflows. | Can justify a release decision defensibly.
+Executive / Sponsor | Understand portfolio health, value, and risk. | Plain-English summaries, outcomes, deployment status, quality trends, business-level visibility. | Can understand state and risk in minutes, not hours.
+
+--- TABLE 6 ---
+Global navigation
+Home · Studio · Runs · Knowledge · Deployments · Observability · Governance · Executive · Settings
+
+--- TABLE 7 ---
+Area | Purpose | Default audience | Key objects
+Home | Orient the user quickly and surface the most important active work, risks, and next actions. | All users | Recent agents, active runs, alerts, pending approvals.
+Studio | Create or improve an agent across the full lifecycle from brief through release. | Builders, engineers | Briefs, candidates, tools, memory, evaluation packages.
+Runs | Inspect live and historical activity across design runs, evaluation jobs, and runtime operations. | Engineers, operators | Runs, tasks, failures, timelines.
+Knowledge | Manage sources, retrieval assets, templates, and reusable evidence. | Builders, engineers | Documents, indexes, templates, episodes.
+Deployments | Review versions, environment status, canaries, and rollback readiness. | Engineers, governance | Versions, environments, releases.
+Observability | Provide deep diagnostic visibility across metrics, logs, traces, tools, and models. | Engineers, operators | MELT data, incidents, latency, cost.
+Governance | Show policy status, approval flows, audit history, and risk posture. | Governance, engineers | Approvals, violations, audit records.
+Executive | Provide a portfolio view of outcome, quality, rollout health, and risk. | Executives | Portfolio cards, trends, status summaries.
+
+--- TABLE 8 ---
+Screen | Primary purpose | Core layout | Most important UX principle
+Home Dashboard | Fast orientation. | Command bar + recent work + alerts + approval queue + health strip. | Show only what needs action now.
+Brief Builder | Turn fuzzy goals into structured briefs. | Guided input left, live brief center, AI suggestions right. | Reduce form effort; explain why questions matter.
+Agent Studio | Main creation workspace. | Step rail left, artifact canvas center, insights panel right. | Keep context stable while artifacts change.
+Architecture Comparison | Choose the right design direction. | Candidate columns/cards + score strip + rationale diff. | Comparison must feel disciplined, not decorative.
+Evaluation Lab | Review quality, safety, and release readiness. | Verdict banner + grouped failures + evidence drawer. | Summary first, raw evidence on demand.
+
+--- TABLE 9 ---
+Screen | Primary purpose | Core layout | Most important UX principle
+Release Center | Approve and control deployment. | Version diff center + checklist and sign-off panel right. | Make release decisions explicit and auditable.
+Runtime Overview | Monitor one live agent. | Health summary + live runs + timeline + deployment card. | Operational clarity over visual novelty.
+Observability Console | Deep diagnostics. | Persistent filters + Metrics/Logs/Traces tabs + correlated events. | Support root cause analysis without overload.
+Governance Center | Manage policy, approvals, and audit. | Approval queue left + packet center + audit sidebar. | Defensibility and clarity.
+Executive Portfolio | Portfolio-level status and outcomes. | KPI strip + portfolio cards + trend charts + risk summary. | Plain-English first.
+
+--- TABLE 10 ---
+Design system recommendation
+Create a shared system with foundations (color, type, spacing, radius, motion) and product-specific components such as Architecture Card, Evaluation Verdict Module, Risk Matrix Panel, Release Diff Viewer, Tool Permission Matrix, and Trace-linked Evidence Drawer.
+
+--- TABLE 11 ---
+Research signal | Implication for Agent Architect Pro
+Microsoft HAX: evidence-based human-AI guidelines emphasize clear expectations, explanations, feedback, global controls, and cautious updates [R1]. | The product should expose rationale, granular feedback loops, and explicit controls over tools, memory, and monitoring behavior.
+Google PAIR: explainability and trust are linked; users need calibrated trust, not blind trust [R2]. | Every key surface should support summary, rationale, evidence, and uncertainty display.
+Google PAIR: long-running AI workflows create anxiety when users cannot tell what is happening or what has failed [R3]. | Runs, simulations, and release flows need visible progress, state, and fallback messaging.
+NN/g: complex applications need strong IA, clear hierarchy, and reduction of cognitive load [R4][R5]. | Use role-aware defaults, progressive disclosure, and structured review packets instead of giant all-in-one dashboards.
+NN/g: error messages should be visible, constructive, and respectful of user effort [R6]. | Evaluation failures, release blocks, and runtime incidents must explain impact and next action.
+IBM: agent observability requires MELT plus AI-specific signals such as tool interactions, token usage, decision paths, and human handoff [R7]. | Observability views must go beyond generic CPU and uptime charts and include AI-native operational signals.
+
+--- TABLE 12 ---
+Phase | Focus | Deliverables
+Phase 1 | Foundation | Design system, app shell, Home, Brief Builder, Studio, Comparison, Evaluation summary.
+Phase 2 | Production control | Release Center, Runtime Overview, baseline Observability, approvals, version diffs.
+Phase 3 | Trust and intelligence UX | Debate review, simulation review, knowledge explorer, stronger audit and policy surfaces.
+Phase 4 | Enterprise maturity | Executive portfolio, advanced governance, collaboration, team workflows, customizable dashboards.
+
+--- TABLE 13 ---
+Decision rule for the next phase
+Use this spec to align on product direction and screen priorities before any visual exploration. After alignment, the next deliverables should be: 1) a wireframe deck for the MVP surfaces, and 2) a Figma-ready screen inventory with component dependencies.

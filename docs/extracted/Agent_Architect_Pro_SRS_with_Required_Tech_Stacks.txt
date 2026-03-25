@@ -1,0 +1,199 @@
+Software Requirements Specification (SRS)
+Agent Architect Pro — Production-grade multi-agent design, evaluation, deployment, and operations platform
+
+1. Introduction
+This SRS defines the functional, non-functional, operational, security, and integration requirements for Agent Architect Pro. The platform is intended to intake agent goals, research domain needs, generate agent architectures, configure tools and memory, run evaluation and simulation, package agents for deployment, operate them in production, and improve them over time.
+This specification is written for executive sponsors, product owners, software architects, ML/platform engineers, security reviewers, DevOps teams, and UI/UX leads. It is deliberately implementation-oriented and includes the recommended tech stacks needed to build a production-grade system.
+2. Vision, scope, and objectives
+• Provide a single platform for designing, validating, deploying, monitoring, and improving AI agents and multi-agent systems.
+• Support the full agent lifecycle: brief → design → compare → evaluate → approve → deploy → monitor → improve.
+• Separate control-plane responsibilities from execution-plane, knowledge-plane, trust-plane, improvement-plane, and operations-plane concerns.
+• Deliver enterprise-grade governance, observability, versioning, and release management.
+• Enable both guided product use through the UI and automation use through APIs and workflows.
+
+3. Stakeholders and user classes
+
+4. Product overview and system context
+Agent Architect Pro is an AI-native platform rather than a single agent. It orchestrates multiple subsystems that collaborate to turn a user goal into a governed, deployable, observable agent package. The baseline architecture includes request intake, planning/orchestration, retrieval and memory, multi-agent generation and critique, evaluation/simulation, deployment, runtime execution, identity/audit, and dashboarding.
+The preferred interaction model is lifecycle-oriented: the product UI should let a user move from goal definition to live operations without needing to understand the entire backend architecture upfront.
+
+5. Functional requirements
+
+6. Non-functional requirements
+
+7. Security, governance, and compliance requirements
+• Every user-facing and service-to-service interaction must be authenticated and authorized.
+• Workers must not hold long-lived credentials; sensitive access must use short-lived signed tokens or secret injection through approved brokers.
+• Every external action must traverse a Tool Broker or equivalent mediated interface.
+• Every release candidate must have an evaluation packet and, for production, an approval packet.
+• The system must retain append-only audit evidence for release changes, policy changes, tool calls, model requests, and approval decisions.
+• Default policy posture is fail closed on missing policy, missing token, or missing approval for protected actions.
+
+8. Data and interface requirements
+8.1 Core business objects
+
+8.2 External interfaces
+
+9. Required technology stacks (recommended target architecture)
+
+
+10. Reference implementation view
+10.1 Core service decomposition
+
+10.2 Deployment environments
+• Development: local containers, mocked integrations, lightweight Postgres/Redis/Kafka, seeded demo data.
+• Staging: production-like cluster with safe datasets, full workflow/evaluation/deployment path, synthetic observability load.
+• Production: managed services where possible, environment separation, restricted admin actions, backups, disaster recovery, and controlled rollout patterns.
+11. Delivery phases and milestones
+
+12. Acceptance criteria summary
+• A user can define a goal and receive a reviewable candidate agent package through the product UI.
+• A candidate package cannot reach production without an evaluation packet, release controls, and required approvals.
+• Operators can trace a production issue from deployment to run to task to tool/model activity.
+• Every production action is attributable to a human or machine identity and preserved in audit evidence.
+• The platform can scale runtime workers independently from the control APIs.
+• The architecture supports iterative expansion without rewriting the core control path.
+13. Key architectural decisions
+• Use Temporal for durable orchestration instead of hand-rolled workflow state machines.
+• Use PostgreSQL as the source of truth; extend with pgvector before introducing a separate vector database.
+• Keep model access and tool access behind dedicated choke points: Model Gateway and Tool Broker.
+• Do not put experimental self-improvement directly on the live production path.
+• Use append-only audit evidence and signed artifacts before considering blockchain-style anchoring.
+14. Risks and mitigations
+
+15. Appendix — glossary
+
+
+--- TABLE 1 ---
+Document intent: translate the project vision, architecture, and product direction into a buildable SRS with recommended technology stacks, delivery boundaries, and acceptance criteria.
+
+--- TABLE 2 ---
+In scope | Out of scope for v1
+Agent brief capture, architecture generation, retrieval, debate/critique, evaluation, packaging, deployment, runtime monitoring, audit, approvals, and analytics. | Unbounded autonomous self-evolution into production, generalized AGI behavior, unsupported unrestricted tool execution, and full mobile authoring experience.
+
+--- TABLE 3 ---
+User class | Primary goals | Success measures
+Agent Builder | Create a professional agent from a business or domain goal. | Time to first viable agent, quality of generated package, clarity of rationale.
+ML / Platform Engineer | Operate the runtime, evaluate models and tools, and manage releases. | Stable SLOs, rollback speed, evaluation coverage, deployment confidence.
+Governance / Risk Owner | Review policy, safety, audit evidence, and approval packets. | Traceability, policy conformance, reduction of unsafe releases.
+Executive / Product Sponsor | Track portfolio health, outcome trends, and strategic risk. | Production adoption, quality trend, cost efficiency, risk posture.
+
+--- TABLE 4 ---
+Plane | Core capabilities | Primary persistence / runtime concern
+Ingress & Control | API Gateway, auth, supervisor, planner, release manager. | Run state, workflows, approval state.
+Execution | Swarm orchestration, runtime manager, sandbox, tool broker, result aggregation. | Task queues, worker lifecycle, secure execution.
+Knowledge | Retrieval, episodic memory, artifact catalog, vector search, source management. | Documents, embeddings, episodes, artifacts.
+Trust | Identity registry, token service, policy store, audit ledger, artifact signing. | Identity records, signed artifacts, append-only audit evidence.
+Improvement | Evaluation, replay, simulation, experimentation, meta-learning support. | Benchmarks, scenario packs, evaluation reports.
+Operations | Metrics, logs, traces, alerts, dashboards, portfolio analytics. | Telemetry pipelines and SLO reporting.
+
+--- TABLE 5 ---
+ID | Requirement | Priority | Description | Acceptance criteria
+FR-001 | Requirement intake | Must | The system shall capture a goal, constraints, success criteria, domain, risk profile, and required integrations through API and UI flows. | A run cannot start without a validated RunSpec containing mandatory fields and tenant context.
+FR-002 | Research and grounding | Must | The system shall retrieve and organize domain evidence, references, templates, and past artifacts relevant to the requested agent. | For each generated candidate, the system stores the retrieval evidence used and exposes it for review.
+FR-003 | Planning and orchestration | Must | The platform shall compile a request into a task DAG and execute it with dependency awareness, budgets, retries, and timeouts. | Each run exposes plan state, task state, retry history, and terminal outcome.
+FR-004 | Architecture generation | Must | The system shall generate one or more candidate agent architectures including reasoning style, tools, workflows, memory, and evaluation plan. | The user can view at least one recommended architecture and compare it to alternatives.
+FR-005 | Critique and selection | Should | The platform shall support multi-agent critique or structured review of architecture candidates before selection. | A candidate decision packet shows critiques, revisions, and final rationale.
+FR-006 | Tool and memory configuration | Must | The system shall define allowed tools, permissions, memory policy, and retrieval configuration per agent version. | Each agent version has a machine-readable tool manifest and memory policy bundle.
+FR-007 | Agent package generation | Must | The platform shall generate a complete versioned package including prompt/config, architecture metadata, tool manifest, workflow manifest, evaluation plan, and deployment metadata. | A signed package artifact can be produced for any candidate marked release-eligible.
+FR-008 | Evaluation and simulation | Must | The system shall run benchmark tests, adversarial tests, regression checks, and scenario simulation before release. | Each release candidate produces an EvaluationReport with pass/fail recommendation.
+FR-009 | Deployment and release control | Must | The platform shall support staging, canary, production rollout, and rollback with approval gates. | Rollback can be initiated from the product for a bad canary or degraded live release.
+FR-010 | Runtime operations | Must | The system shall execute agent tasks in sandboxed workers with mediated tool access and model access. | Every task run records the worker, token, tools used, model requests, and outputs.
+FR-011 | Observability | Must | The platform shall expose metrics, logs, traces, run timelines, and alerting for all core planes. | Operators can correlate a run across traces, logs, tools, and deployment state using shared IDs.
+FR-012 | Governance and audit | Must | The system shall maintain immutable audit evidence for identity, approvals, tool usage, deployment actions, and policy decisions. | Audit records are queryable by run, agent version, user, and action type.
+FR-013 | Continuous improvement | Should | The platform shall store reusable episodes, outcomes, and benchmark results to improve future recommendations and experiments. | Historical episodes can be searched and referenced by later runs.
+FR-014 | User experience | Must | The UI shall provide lifecycle-oriented workflows for Studio, Evaluation, Deployments, Observability, Governance, and Executive views. | A user can complete the core lifecycle without using backend consoles.
+
+--- TABLE 6 ---
+Category | Requirement
+Availability | Core control APIs and runtime orchestration services should target 99.9% monthly availability in production.
+Scalability | The architecture shall support horizontal scale for stateless APIs, workers, retrieval services, and telemetry collectors.
+Performance | Interactive product pages should feel responsive; long-running jobs shall expose progress, state, and resumability.
+Security | All privileged actions require authenticated identity, RBAC, short-lived service tokens, and audit logging.
+Privacy | Source data, prompts, outputs, and telemetry shall be tenant-aware and isolated.
+Reliability | Critical orchestration must be durable across process restarts, worker crashes, and transient network failures.
+Maintainability | Services shall expose versioned APIs, structured contracts, and observability for safe operations and upgrades.
+Extensibility | New models, tools, evaluators, and knowledge sources shall be pluggable without core rewrites.
+Accessibility | The web product shall meet enterprise-grade accessibility expectations including keyboard support and color-safe status signals.
+
+--- TABLE 7 ---
+Control objective | Minimum implementation
+Identity & access | SSO/OIDC for humans, service identities for machines, RBAC for product access, scoped workload tokens for runtime workers.
+Data protection | TLS in transit, encryption at rest, secret management, tenant-aware storage boundaries, secure backups.
+Auditability | Append-only audit stream with immutable hashes, searchable audit index, approval and release history.
+Release safety | Signed artifacts, canary policy, rollback policy, environment separation, protected production actions.
+Runtime isolation | Container sandboxing, network egress control, filesystem restrictions, resource quotas, policy guardrails.
+
+--- TABLE 8 ---
+Object | Purpose | Examples of key fields
+RunSpec | Starts a governed execution. | run_id, tenant_id, objective, constraints, budget, deadline, policy_profile
+PlanSpec | Task DAG and execution intent. | plan_id, tasks[], dependencies, budget, retry_policy
+AgentSpec / AgentVersion | Logical agent design and immutable released version. | agent_spec_id, agent_version_id, manifests, policies, evaluation baseline
+TaskSpec / TaskResult | Runnable unit and normalized result. | task_id, task_attempt_id, worker_id, outputs, cost, status
+EvaluationReport | Quality and safety evidence for promotion. | candidate_id, metrics, failures, recommendation
+AuditEvent | Tamper-evident evidence stream item. | event_id, actor, action, target, prev_hash, hash, timestamp
+
+--- TABLE 9 ---
+Interface | Type | Requirement
+Product web app | HTTPS | Provide authenticated lifecycle workflows for design, evaluation, deployment, runtime inspection, and governance.
+Public API | REST/gRPC | Expose run creation, run state, package retrieval, evaluation results, and deployment operations via versioned endpoints.
+Event backbone | Kafka-compatible | Emit domain events for runs, tasks, evaluations, releases, alerts, and audit fan-out.
+Model providers | SDK / HTTPS | Route all model inference through a single Model Gateway with policy, quotas, and observability.
+Knowledge connectors | Batch/stream | Ingest documents, tickets, code, and artifacts with lineage metadata and access control.
+
+--- TABLE 10 ---
+Stack strategy: choose boring, durable platform technologies for the online path; isolate experimental AI capabilities to the improvement plane.
+
+--- TABLE 11 ---
+Layer | Recommended stack | Why this stack fits
+Frontend web app | Next.js (React, TypeScript), Tailwind CSS, TanStack Query, Zustand or Redux Toolkit, Storybook | Strong fit for complex enterprise web UX, design system reuse, authenticated dashboards, and server/client rendering balance.
+API layer | Python 3.12+, FastAPI, Pydantic v2, Uvicorn/Gunicorn | Fast API development, typed contracts, excellent fit for Python-heavy AI platforms and generated docs/openapi.
+Workflow / orchestration | Temporal | Durable long-running workflows, retries, resumability, and clear separation between workflow state and worker execution.
+Event streaming | Apache Kafka (or Redpanda for simpler ops in some environments) | Reliable domain-event backbone for runs, tasks, releases, telemetry fan-out, and async integrations.
+Runtime workers | Python worker services in containers; sandbox execution using Kubernetes jobs/pods and isolated service accounts | Keeps execution close to the Python AI ecosystem while allowing horizontal scaling and isolation.
+Primary OLTP database | PostgreSQL 16+ (managed service preferred) | Operational truth for runs, plans, approvals, identities, manifests, and governance state.
+Vector and hybrid retrieval | PostgreSQL + pgvector for early to mid scale; optional specialized vector engine later if scale requires | Keeps vectors and operational data close together while preserving SQL joins, ACID behavior, and simpler governance.
+Cache / rate / ephemeral coordination | Redis | Low-latency cache, session/data acceleration, distributed locks where appropriate, and short-lived state.
+Object storage | S3-compatible object storage | Versioned storage for artifacts, datasets, reports, trace exports, and large evaluation outputs.
+Identity & access | Keycloak or cloud-native OIDC provider, plus OPA or Cedar-based policy service | Standards-based SSO and centralized policy enforcement with room for enterprise RBAC/ABAC evolution.
+Container & platform | Docker, Kubernetes, Helm, Argo CD | Standard packaging, scheduling, self-healing, declarative deployments, and GitOps promotion flow.
+Observability | OpenTelemetry, Prometheus, Grafana, Loki, Tempo/Jaeger | Unified traces/metrics/logs, vendor-neutral instrumentation, and deep correlation across services.
+CI/CD and release | GitHub Actions or GitLab CI, Argo CD, Trivy, Cosign, SBOM generation | Automated build/test/sign/scan/deploy flow aligned to signed artifacts and governed releases.
+ML / evaluation | MLflow for experiment tracking, pytest + custom eval harnesses, Jupyter only for research not production | Clear boundary between production platform and experimentation/benchmark evidence.
+
+--- TABLE 12 ---
+Service | Primary responsibilities | Preferred language/runtime
+api-gateway / web-bff | Authentication handoff, tenant context, API aggregation, rate limiting, UI support. | TypeScript / Node.js or managed API gateway + Next.js BFF.
+supervisor-service | Run lifecycle, orchestration state, approval checks, final response assembly. | Python + Temporal SDK.
+planner-service | Task DAG generation and budget-aware planning. | Python.
+retrieval-service | Knowledge indexing, retrieval, rerank, source lineage. | Python.
+tool-broker | Mediated tool execution, secret brokerage, tool audit events. | Python or Go.
+runtime-worker | Task execution, prompt/model calls, checkpointing, result emission. | Python.
+evaluation-service | Benchmark jobs, replay, adversarial testing, report generation. | Python.
+identity/audit service | Workload tokens, audit ingestion, release signatures, policy integration. | Go or Python.
+telemetry pipeline | OTel collectors, metrics/logs/traces routing, alerting. | OpenTelemetry Collector + observability backends.
+
+--- TABLE 13 ---
+Phase | Goal | Deliverables
+Phase 1 — Core platform | Establish the online control path. | Gateway, web shell, supervisor, planner, runtime workers, retrieval, Postgres, Redis, object storage, basic telemetry, basic auth.
+Phase 2 — Governance & release | Make production safe. | Approval flows, audit ledger, artifact signing, canary/rollback, policy service, environment controls.
+Phase 3 — Quality plane | Prove candidate quality before rollout. | Evaluation service, replay jobs, scenario simulation, benchmark packs, release packets.
+Phase 4 — UX maturity | Deliver role-based product usability. | Studio, Evaluation Lab, Deployments, Observability, Governance, Executive views.
+Phase 5 — Improvement plane | Leverage historical evidence for better future runs. | Episodic memory, experiment tracking, recommendation support, candidate ranking.
+
+--- TABLE 14 ---
+Risk | Impact | Mitigation
+Over-centralized supervisor logic | Bottlenecks and brittle workflows. | Keep planning, orchestration, scheduling, retrieval, and execution as separate services with explicit contracts.
+RAG / memory ambiguity | Poor explainability and unstable behavior. | Separate semantic retrieval, episodic memory, scratchpad state, and source-of-truth records.
+Unsafe tool usage | Security incidents or data exfiltration. | Tool Broker, short-lived tokens, allowlists, egress control, and audit-by-default.
+Telemetry cost explosion | Observability becomes too expensive. | Sampling, retention tiers, aggregated dashboards, and clear trace IDs only where needed.
+Premature tech sprawl | Slow delivery and difficult operations. | Prefer managed Postgres/Redis/Kafka/Kubernetes services and avoid multi-database sprawl early.
+
+--- TABLE 15 ---
+Term | Definition
+Run | A full end-to-end execution of a user or API request through the platform.
+Plan | A task graph that decomposes a run into executable units with dependencies and budgets.
+Agent package | The versioned set of prompts, configs, manifests, policies, and evaluation metadata needed to deploy an agent.
+Evaluation report | A structured evidence packet describing candidate quality, safety, cost, and release recommendation.
+Tool Broker | A controlled service that mediates and audits external tool actions.
+Model Gateway | A controlled service that routes, meters, and observes all model inference requests.

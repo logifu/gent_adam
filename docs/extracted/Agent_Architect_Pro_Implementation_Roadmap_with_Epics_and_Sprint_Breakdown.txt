@@ -1,0 +1,114 @@
+Agent Architect Pro — Implementation Roadmap
+Epics, sprint breakdown, dependencies, and delivery gates aligned to the solution architecture and SRS.
+
+1. Delivery framing
+• Roadmap horizon: 12 sprints over approximately 24 weeks.
+• Delivery objective: ship a stable v1 that supports agent creation, governed execution, evaluation, deployment, and runtime monitoring.
+• Method: architecture-first scaffolding in early sprints, product workflows in the middle, hardening and controlled rollout in the final phase.
+• Planning assumption: high-risk research features such as advanced debate search, self-evolution, or agent economy remain outside the v1 critical path.
+2. Epic structure
+
+3. Release milestones
+
+4. Dependency notes
+• UI work can begin in parallel using mocks, but production UI cannot complete until contracts stabilize in E3 and E4.
+• Evaluation and replay depend on artifacts, telemetry, and a functioning run lifecycle.
+• Release controls depend on signed artifacts, audit events, and staging deployment pipelines.
+• Observability should be embedded from sprint 1; retrofitting it later is high-cost and high-risk.
+
+5. Sprint-by-sprint breakdown
+
+6. Backlog framing inside each epic
+
+7. Team shape and capacity guidance
+
+8. Quality gates by phase
+
+9. Risk register for delivery
+
+
+10. Success metrics for the roadmap
+• By sprint 5: one end-to-end vertical slice complete with auditable execution.
+• By sprint 8: product beta supports the primary user journey without CLI dependence.
+• By sprint 10: production candidate can deploy to canary with automated rollback.
+• By sprint 12: pilot users can create, evaluate, deploy, and monitor agents using the product UI with agreed operational guardrails.
+
+--- TABLE 1 ---
+Planning basis: 2-week sprints, one cross-functional platform squad plus shared design/ML support, first production-ready release targeted in 24 weeks.
+
+--- TABLE 2 ---
+Epic ID | Epic | Outcome | Primary owners
+E1 | Foundations and DevEx | Working monorepo, environments, CI/CD, secrets, baseline observability, coding standards. | Platform engineering
+E2 | Identity, Auth, and Governance Base | User auth, RBAC, workload identity, policy store, audit foundation. | Platform + security
+E3 | Control Plane | Supervisor, Planner, core contracts, run lifecycle, plan compilation. | Backend / AI platform
+E4 | Execution Plane | Swarm orchestration, runtime manager, sandbox, tool broker, task execution path. | Backend / infrastructure
+E5 | Knowledge Plane | Retrieval, vector indexing, artifact catalog, episodic memory foundations. | AI platform / data
+E6 | Model Gateway and AI Services | Model routing, quotas, provider abstraction, inference telemetry. | ML platform
+E7 | Product UI | Home, Studio, Evaluation, Release, Runtime surfaces. | Frontend / design
+E8 | Evaluation and Improvement Plane | Replay, benchmark runs, simulation harness, evaluation reports. | ML platform / QA
+E9 | Release, Hardening, and Production Readiness | Canary, rollback, SLOs, incident readiness, security hardening. | All squads
+
+--- TABLE 3 ---
+Milestone | Target sprint | Definition of done
+M1 — Architecture skeleton | Sprint 2 | Repos, environments, CI/CD, auth shell, contracts, telemetry bootstrap, architectural decisions locked.
+M2 — End-to-end alpha | Sprint 5 | One agent workflow works from intake to execution with retrieval, model gateway, and audit trail.
+M3 — Product beta | Sprint 8 | Primary UI flows function; evaluation and release center exist; staging environment active.
+M4 — Production candidate | Sprint 10 | Canary release, rollback, hardening, and observability complete; acceptance tests passing.
+M5 — v1 launch gate | Sprint 12 | Pilot tenants onboarded, operational runbooks signed off, backlog for phase 2 prioritized.
+
+--- TABLE 4 ---
+Sprint | Theme | Key deliverables | Primary epics | Exit criteria
+S1 | Platform bootstrap | Monorepo, branching strategy, CI templates, container base images, local dev stack, OpenTelemetry bootstrap, design-system shell. | E1, E7 | Repos live; CI green; local stack runs; initial UI shell in place.
+S2 | Contracts and identity base | RunSpec/PlanSpec/TaskSpec schemas, API gateway shell, user auth, RBAC roles, secrets flow, architecture ADR set. | E1, E2, E3 | Versioned contracts approved; auth works; secrets path validated.
+S3 | Supervisor + Planner alpha | Supervisor state machine, Planner stub, PostgreSQL schema, run tracking, mocked model gateway, first brief-to-plan flow. | E3 | A run can be created and planned with persisted state.
+S4 | Runtime and tool mediation | Swarm queueing, runtime manager, sandbox policy skeleton, Tool Broker MVP, audit event emission, worker heartbeats. | E4, E2 | A task can execute in a controlled runtime and record audit events.
+S5 | Retrieval and end-to-end alpha | Retrieval service, pgvector indexing, artifact catalog MVP, model gateway MVP, end-to-end request flow in staging-lite. | E5, E6 | One vertical slice works from intake to response with retrieval and telemetry.
+S6 | Studio and runtime UI | Home, Studio shell, run list, runtime overview, API integration, design tokens finalized, basic approval state in UI. | E7 | Users can create and inspect runs through the product UI.
+S7 | Evaluation foundations | Benchmark harness, EvaluationReport schema, replay harness, basic canary packaging, release diff UI. | E8, E9, E7 | Candidates can be evaluated and compared against baseline artifacts.
+S8 | Beta workflow complete | Evaluation Lab UI, Release Center, staging environment hardening, policy checks, episodic memory MVP. | E5, E7, E8, E9 | Primary v1 workflow complete in staging with approval checkpoints.
+S9 | Security and resilience hardening | Vault integration, signed artifacts, network policies, rate limits, retry policies, queue backpressure tuning. | E2, E4, E9 | Threat model actions closed; runtime and release controls hardened.
+S10 | Observability and canary readiness | Dashboards, alert rules, SLOs, canary/rollback automation, on-call runbooks, incident drills. | E9 | Production candidate canary can be executed safely in pre-prod.
+S11 | Pilot launch preparation | Pilot tenant config, support playbooks, UAT, data retention policies, cost dashboards, defect burn-down. | E7, E9 | Pilot tenants ready; no sev-1 launch blockers remain.
+S12 | Launch and stabilization | Pilot release, hypercare, post-launch backlog capture, phase-2 prioritization, final architecture review. | All epics | Pilot is live, monitored, and governed with agreed success KPIs.
+
+--- TABLE 5 ---
+Epic | Suggested stories / work packages
+E1 Foundations | Repo templates; IaC baselines; CI checks; dependency scanning; local developer stack; contract testing harness.
+E2 Identity/Governance | OIDC login; RBAC model; policy store; secrets integration; audit record shape; approval workflow primitives.
+E3 Control Plane | Run creation API; Supervisor lifecycle; Planner logic; budget enforcement; release-state transitions.
+E4 Execution Plane | Queue model; runtime instance API; sandbox controls; Tool Broker adapters; result aggregator.
+E5 Knowledge Plane | Vector ingestion; retrieval/rerank API; artifact catalog; episode writer; source evidence packaging.
+E6 Model Gateway | Provider abstraction; caching; quota rules; telemetry envelopes; fallback policy.
+E7 Product UI | Navigation shell; Studio; Evaluation Lab; Release Center; Runtime Overview; design system buildout.
+E8 Evaluation | Benchmark packs; replay jobs; simulation harness; verdict service; candidate comparison reports.
+E9 Production Readiness | Canary automation; rollback; SLO dashboards; incident runbooks; load and security tests.
+
+--- TABLE 6 ---
+Role | Recommended baseline allocation
+Tech lead / chief architect | 0.5–1.0 FTE across all sprints for architecture decisions, review gates, and risk removal.
+Backend / platform engineers | 3–4 FTE focused on control, execution, auth, release, and data services.
+Frontend engineers | 1–2 FTE from sprint 1 onward, scaling to 2 FTE from sprint 5–10.
+ML / AI engineer | 1–2 FTE for model gateway, retrieval, evaluation, prompt and policy testing.
+SRE / DevOps | 1 FTE shared; heavier from sprint 7 onward for staging, production, and reliability readiness.
+Product design | 0.5–1.0 FTE front-loaded for Studio, Evaluation, Release, and Runtime surfaces.
+QA / test automation | 0.5–1.0 FTE from sprint 4 onward, heavier from sprint 7 onward.
+
+--- TABLE 7 ---
+Phase | Required gate
+End of sprint 2 | Contracts, auth, and observability bootstrap reviewed and approved.
+End of sprint 5 | Vertical slice demo: brief → plan → run → retrieve → respond → audit.
+End of sprint 8 | Beta gate: product workflow complete in staging; no critical policy bypasses.
+End of sprint 10 | Production candidate gate: canary and rollback validated, SLOs and alerts active.
+End of sprint 12 | Launch gate: pilot success metrics agreed, support process staffed, known risks accepted.
+
+--- TABLE 8 ---
+Risk | Likelihood / impact | Mitigation
+Architecture churn in mid-build | Medium / High | Freeze contracts early and route design changes through ADR review.
+UI blocked by unstable APIs | High / Medium | Use API mocks and adapter layers; define schemas first.
+Operational work delayed until late sprints | Medium / High | Staff SRE from the start and require telemetry in every story.
+Model/tool provider volatility | Medium / Medium | Abstract providers behind Model Gateway and Tool Broker from day one.
+Scope creep from research features | High / High | Keep a strict v1 scope and park phase-2 features outside the sprint commitment line.
+
+--- TABLE 9 ---
+Recommended v1 scope boundary
+Include: brief intake, planning, controlled runtime execution, retrieval, model gateway, evaluation summary, release center, canary rollout, runtime monitoring, and audit trail. Defer: advanced self-evolution, autonomous architecture search, agent economy, and broad cross-tenant portfolio analytics.

@@ -1,0 +1,50 @@
+# Agent Architect Pro — Git Ignore
+
+# ── Python ────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+.venv/
+venv/
+env/
+
+# ── Node.js ───────────────────────────────────
+node_modules/
+.next/
+out/
+.turbo/
+
+# ── IDE ───────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Environment ──────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Docker ────────────────────────────────────
+docker-compose.override.yml
+
+# ── Coverage & Testing ───────────────────────
+htmlcov/
+.coverage
+.pytest_cache/
+coverage/
+.nyc_output/
+
+# ── OS ────────────────────────────────────────
+*.log
+*.tmp
+*.temp

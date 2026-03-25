@@ -1,0 +1,112 @@
+Agent Architect Pro — Detailed Phase-by-Phase TO-DO Playbook
+Specific instructed to-do list for best understanding, faster execution, and less project drift.
+
+1. How to use this playbook
+• Read each phase from top to bottom. Complete the checklist items in order unless a dependency explicitly allows parallel execution.
+• Do not mark an item done unless the output exists in a reviewable artifact, repository branch, environment, or tested endpoint.
+• Where an item says “publish,” it means the output must be visible and linked for the team, not only discussed verbally.
+• Where an item says “demo,” it means someone outside the implementer role must be able to observe the result.
+Phase 0 — Program setup and scope lock
+• ☐ Confirm v1 scope boundary: include brief intake, planning, controlled runtime, retrieval, model gateway, evaluation summary, release center, canary rollout, runtime monitoring, and audit trail.
+• ☐ Explicitly defer advanced self-evolution, autonomous architecture search, agent economy, and broad cross-tenant analytics from the v1 critical path.
+• ☐ Publish the six-plane architecture summary for the whole team.
+• ☐ Publish the role model: builder, engineer/operator, governance owner, executive sponsor.
+• ☐ Create a single source-of-truth document index linking SRS, solution architecture, roadmap, API pack, UX spec, wireframes, and design build briefs.
+• ☐ Set a 12-sprint calendar with milestone reviews at sprint 2, 5, 8, 10, and 12.
+Phase 1 — Foundations and DevEx (Sprint 0–2)
+• ☐ Create monorepo or modular repo structure with folders for control plane, execution plane, knowledge plane, trust plane, improvement plane, operations tooling, and frontend.
+• ☐ Add CI checks: lint, type checks, test placeholders, dependency scanning, and image build verification.
+• ☐ Define OpenAPI-first or schema-first workflow for contracts.
+• ☐ Publish RunSpec, PlanSpec, TaskSpec, TaskResult, EvaluationReport, and AuditEvent schemas.
+• ☐ Stand up local development stack with PostgreSQL, Redis, Kafka-compatible queue, object storage emulator, and mock auth.
+• ☐ Stand up observability bootstrap: tracing, structured logs, metrics naming convention, dashboard starter, shared correlation ID rules.
+• ☐ Implement user authentication shell and role claims.
+• ☐ Start Figma foundations: tokens, navigation shell, status semantics, table/timeline/banner patterns.
+Phase 2 — Identity and trust foundation (Sprint 1–3)
+• ☐ Implement OIDC login and role mapping for builder, operator, governance, and executive routes.
+• ☐ Implement workload token issuance for runtime and tool calls.
+• ☐ Define policy bundle format and rule loading mechanism.
+• ☐ Implement append-only AuditEvent ingestion pipeline.
+• ☐ Publish release approval matrix for staging, canary, and production.
+• ☐ Implement blocked/allowed tool call audit behavior.
+• ☐ Create threat model for identity, tool execution, release control, and audit integrity.
+Phase 3 — Control-plane alpha (Sprint 2–4)
+• ☐ Implement POST /v1/runs with validation, idempotency, and tenant context.
+• ☐ Implement GET /v1/runs/{run_id} and cancellation endpoint.
+• ☐ Implement Planner service and POST /v1/plans.
+• ☐ Persist run state, plan state, deadlines, and retry history in PostgreSQL.
+• ☐ Emit run.created, plan.ready, and task.submitted events.
+• ☐ Demonstrate a brief-to-plan flow with stored state and correlated telemetry.
+Phase 4 — Execution-plane alpha (Sprint 3–5)
+• ☐ Implement Swarm/queue scheduling flow for runnable tasks.
+• ☐ Implement runtime manager with worker registration, heartbeat, and assignment.
+• ☐ Implement sandbox policy skeleton and resource limits for workers.
+• ☐ Implement Tool Broker MVP and enforce all external actions through it.
+• ☐ Implement Result Aggregator MVP.
+• ☐ Demonstrate one controlled task execution with worker identity, tool mediation, logs, traces, and audit events.
+Phase 5 — Knowledge and model path alpha (Sprint 4–6)
+• ☐ Implement Retrieval search API with filters and scope support.
+• ☐ Stand up pgvector-backed vector indexing and source metadata tables.
+• ☐ Implement artifact catalog MVP for manifests, build records, and evaluation outputs.
+• ☐ Implement Model Gateway alpha with provider abstraction and routing policy.
+• ☐ Connect retrieval and model gateway into one vertical slice run.
+• ☐ Store source references used for a candidate and expose them for review.
+Phase 6 — Vertical-slice proof (by Sprint 5)
+• ☐ Demonstrate end-to-end: goal intake → run creation → planning → retrieval → execution → response → audit query.
+• ☐ Show one trace across all participating services using shared correlation IDs.
+• ☐ Show blocked tool behavior with policy denial and audit trail.
+• ☐ Publish alpha demo checklist and defects list.
+Phase 7 — Product UI core (Sprint 4–8)
+• ☐ Build Home dashboard default state and role-aware variations.
+• ☐ Build command palette and notifications center.
+• ☐ Build Goal Intake and Brief Builder.
+• ☐ Build Architecture Comparison Board and Architecture Canvas.
+• ☐ Build Tools & Permissions config and Memory & Retrieval config.
+• ☐ Build Evaluation Lab summary views and Release Readiness view.
+• ☐ Ensure right-side context panel exists with advice, warnings, and next actions.
+• ☐ Connect these screens to stable contracts or approved mocks only.
+Phase 8 — Evaluation, governance, and release surfaces (Sprint 6–9)
+• ☐ Build Evaluation failure detail and simulation review screens.
+• ☐ Implement EvaluationReport production path and candidate comparison evidence.
+• ☐ Build Governance Queue and Approval Packet.
+• ☐ Build Release Center, Deployment Center, Canary Monitor, and Version Diff.
+• ☐ Block release without signed artifact, evaluation report, and required approval evidence.
+• ☐ Show explicit rollback controls and change summaries.
+Phase 9 — Runtime and observability surfaces (Sprint 7–10)
+• ☐ Build Runs Explorer, Run Detail Timeline, Trace & Tool Inspector, and Observability Console.
+• ☐ Implement dashboards for API latency, task completion, model/tool usage, queue health, and release status.
+• ☐ Implement alert rules for degraded health, queue growth, canary failure, and missing telemetry.
+• ☐ Ensure runtime views remain readable in high-volume conditions.
+• ☐ Run at least one incident drill and trace a failure from deployment to run to tool/model activity.
+Phase 10 — Production readiness (Sprint 9–11)
+• ☐ Implement artifact signing and signature verification in the release path.
+• ☐ Implement canary rollout automation and rollback automation.
+• ☐ Finalize runbooks for canary, rollback, degraded model route, queue overload, and tool broker outage.
+• ☐ Execute performance test plan for API, queue, worker scale, retrieval latency, and release flow.
+• ☐ Close threat-model remediation items that block launch.
+• ☐ Freeze beta scope and move non-v1 features to the phase-2 backlog.
+Phase 11 — Pilot launch and stabilization (Sprint 11–12)
+• ☐ Configure pilot tenants and data policies.
+• ☐ Complete UAT across builder, operator, governance, and executive journeys.
+• ☐ Publish launch dashboard with success metrics and on-call ownership.
+• ☐ Execute pilot release and hypercare plan.
+• ☐ Record launch defects, triage them, and publish the phase-2 backlog with clear priorities.
+2. Daily command checklist by role
+
+
+
+--- TABLE 1 ---
+This playbook converts the roadmap into specific team checklists. Use it as the working implementation companion to the SRS, solution architecture, roadmap, API contract pack, and UX build docs.
+
+--- TABLE 2 ---
+Role | Daily checklist
+Chief architect | Review one architectural risk, one dependency risk, one scope risk, and one contract change request every day.
+Tech lead | Confirm every in-progress story has owner, dependency, acceptance criteria, and demo path.
+Backend/platform | Verify new endpoints emit standard envelopes, audit hooks, and telemetry before merge.
+Frontend/design | Verify each screen or component has default, loading, empty, error, and permission-limited states where relevant.
+ML/platform | Verify retrieval evidence, evaluation evidence, and model-route telemetry exist for changed flows.
+SRE/DevOps | Verify dashboard freshness, alert noise, environment drift, and release automation health.
+
+--- TABLE 3 ---
+Fastest way to save time
+Do not let unresolved ambiguity survive a sprint boundary. If something is unclear at the end of a sprint, convert it into a specific ticket, ADR, contract change, or design note before the next sprint starts.

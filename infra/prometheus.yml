@@ -1,0 +1,147 @@
+# ── Prometheus Configuration ─────────────────────────────
+# Scrape configs for all Agent Architect Pro services
+# NOTE: remote_write receiver enabled via --web.enable-remote-write-receiver flag in docker-compose
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  # ── Control Plane ──────────────────────
+  - job_name: supervisor
+    static_configs:
+      - targets: ["supervisor:8001"]
+        labels:
+          plane: control
+          service: supervisor
+
+  - job_name: planner
+    static_configs:
+      - targets: ["planner:8002"]
+        labels:
+          plane: control
+          service: planner
+
+  - job_name: identity
+    static_configs:
+      - targets: ["identity:8003"]
+        labels:
+          plane: control
+          service: identity
+
+  - job_name: auth
+    static_configs:
+      - targets: ["auth:8004"]
+        labels:
+          plane: control
+          service: auth
+
+  # ── Execution Plane ────────────────────
+  - job_name: swarm
+    static_configs:
+      - targets: ["swarm:8010"]
+        labels:
+          plane: execution
+          service: swarm
+
+  - job_name: runtime_manager
+    static_configs:
+      - targets: ["runtime-manager:8011"]
+        labels:
+          plane: execution
+          service: runtime_manager
+
+  - job_name: sandbox_executor
+    static_configs:
+      - targets: ["sandbox-executor:8012"]
+        labels:
+          plane: execution
+          service: sandbox_executor
+
+  - job_name: result_aggregator
+    static_configs:
+      - targets: ["result-aggregator:8013"]
+        labels:
+          plane: execution
+          service: result_aggregator
+
+  # ── Access Layer ───────────────────────
+  - job_name: model_gateway
+    static_configs:
+      - targets: ["model-gateway:8020"]
+        labels:
+          plane: access
+          service: model_gateway
+
+  - job_name: tool_broker
+    static_configs:
+      - targets: ["tool-broker:8021"]
+        labels:
+          plane: access
+          service: tool_broker
+
+  - job_name: policy_enforcer
+    static_configs:
+      - targets: ["policy-enforcer:8022"]
+        labels:
+          plane: access
+          service: policy_enforcer
+
+  # ── Knowledge Plane ────────────────────
+  - job_name: retrieval
+    static_configs:
+      - targets: ["retrieval:8030"]
+        labels:
+          plane: knowledge
+          service: retrieval
+
+  - job_name: artifact_catalog
+    static_configs:
+      - targets: ["artifact-catalog:8031"]
+        labels:
+          plane: knowledge
+          service: artifact_catalog
+
+  # ── Trust Plane ────────────────────────
+  - job_name: audit
+    static_configs:
+      - targets: ["audit:8040"]
+        labels:
+          plane: trust
+          service: audit
+
+  - job_name: evaluation
+    static_configs:
+      - targets: ["evaluation:8041"]
+        labels:
+          plane: trust
+          service: evaluation
+
+  - job_name: release_manager
+    static_configs:
+      - targets: ["release-manager:8042"]
+        labels:
+          plane: trust
+          service: release_manager
+
+  - job_name: simulation
+    static_configs:
+      - targets: ["simulation:8043"]
+        labels:
+          plane: trust
+          service: simulation
+
+  - job_name: replay
+    static_configs:
+      - targets: ["replay:8044"]
+        labels:
+          plane: trust
+          service: replay
+
+  - job_name: artifact_signer
+    static_configs:
+      - targets: ["artifact-signer:8045"]
+        labels:
+          plane: trust
+          service: artifact_signer

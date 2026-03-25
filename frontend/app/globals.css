@@ -1,0 +1,371 @@
+/* Agent Architect Pro — Design Token System
+ * From UI/UX Deep Dive: 12 colors, 6 typography scales,
+ * 6 spacing values, radius, elevation, grid, and motion tokens.
+ * Tone: Calm, precise, trustworthy, AI-native (not sci-fi).
+ */
+
+@import "tailwindcss";
+
+/* ── Design Tokens as CSS Custom Properties ──────────────── */
+
+:root {
+  /* Colors — 12 tokens */
+  --bg-default: #F7F9FC;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #EDF4FA;
+  --text-primary: #1F2937;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --brand-primary: #3B5CCC;
+  --brand-deep: #1F4E79;
+  --brand-light: #E8EEFB;
+  --state-success: #2E7D32;
+  --state-warning: #B7791F;
+  --state-error: #C0392B;
+  --state-info: #2F75B5;
+  --state-risk-fill: #FCE4D6;
+  --border-default: #E5E7EB;
+  --border-subtle: #F3F4F6;
+
+  /* Typography — Font family */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing — 6 values */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Elevation / Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* Motion */
+  --motion-fast: 120ms ease-out;
+  --motion-standard: 180ms ease-out;
+  --motion-slow: 300ms ease-out;
+
+  /* Grid */
+  --grid-max-width: 1440px;
+  --grid-columns: 12;
+  --grid-gutter: 24px;
+
+  /* Sidebar */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --right-panel-width: 320px;
+}
+
+/* ── Global Reset & Base ─────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-default);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* ── Typography Scale ────────────────────────────────────── */
+
+.type-display-1 {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.type-heading-1 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.type-heading-2 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.type-body-1 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.type-body-2 {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+.type-label {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── App Shell Layout (Three-Panel Studio) ───────────────── */
+/* Left (steps/nav) → Center (main artifact) → Right (AI guidance) */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--motion-standard);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 40;
+}
+
+.app-sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+.app-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-topbar {
+  height: 56px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-5);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.app-content {
+  flex: 1;
+  padding: var(--space-5);
+  max-width: var(--grid-max-width);
+}
+
+/* Three-panel layout for Studio screens */
+.studio-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr var(--right-panel-width);
+  gap: var(--space-5);
+  min-height: calc(100vh - 56px);
+}
+
+.studio-left {
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.studio-center {
+  min-width: 0;
+}
+
+.studio-right {
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Component Tokens ────────────────────────────────────── */
+
+/* Card (CMP-004, etc.) */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--motion-fast), border-color var(--motion-fast);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--brand-primary);
+}
+
+/* Status Chip (CMP-003) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.chip-success { background: #E8F5E9; color: var(--state-success); }
+.chip-warning { background: #FFF8E1; color: var(--state-warning); }
+.chip-error { background: #FFEBEE; color: var(--state-error); }
+.chip-info { background: #E3F2FD; color: var(--state-info); }
+.chip-neutral { background: var(--bg-subtle); color: var(--text-secondary); }
+
+/* Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--motion-fast);
+}
+
+.btn-primary {
+  background: var(--brand-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2E4BB3;
+}
+
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--brand-primary);
+}
+
+/* KPI Card (CMP-004) */
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.kpi-card .kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kpi-card .kpi-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-1);
+}
+
+/* Verdict Banner (CMP-015) */
+.verdict-banner {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.verdict-pass { background: #E8F5E9; color: var(--state-success); border: 1px solid #C8E6C9; }
+.verdict-caution { background: #FFF8E1; color: var(--state-warning); border: 1px solid #FFE082; }
+.verdict-fail { background: #FFEBEE; color: var(--state-error); border: 1px solid #EF9A9A; }
+
+/* Navigation */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all var(--motion-fast);
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background: var(--brand-light);
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+/* Data Table (CMP-011) */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-subtle);
+}
+
+.data-table td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 14px;
+}
+
+.data-table tr:hover td {
+  background: var(--bg-subtle);
+}

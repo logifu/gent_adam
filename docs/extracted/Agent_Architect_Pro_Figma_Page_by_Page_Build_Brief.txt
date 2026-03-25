@@ -1,0 +1,248 @@
+Agent Architect Pro — Figma Page-by-Page Build Brief
+Designer-facing build document aligned to the approved UX spec, screen inventory, and Figma build-order workbook.
+
+1. Build philosophy
+Design the product around the lifecycle of an agent: Brief → Design → Compare → Evaluate → Approve → Deploy → Monitor → Improve. That means the Figma file should privilege role clarity, approval moments, and progressive disclosure over backend complexity.
+
+2. Figma file architecture
+Recommended top-level Figma pages for the first production file:
+3. Milestones and review gates
+
+Foundations and shared system
+This phase establishes the non-negotiable shared system for the whole file. Do not let individual pages invent their own shell, status language, or spacing rules.
+
+
+
+Global and entry experience
+This phase defines first impression, orientation, and how new work begins. The product must feel premium, structured, and calm before it feels powerful.
+
+
+
+Studio core workflow
+This phase contains the most strategic product surfaces. It must make architecture choices, tool setup, memory setup, evaluation, and release readiness feel understandable and defensible.
+
+
+
+Studio extended and review surfaces
+This phase adds supporting context and evidence. These pages deepen trust and technical review, but they should not outshine the main builder flow.
+
+
+
+Runtime, runs, deployments, and debugging
+This phase turns the system into an operational product. It must connect releases, runtime behavior, debugging, and rollout decisions without losing readability.
+
+
+
+Governance and knowledge views
+This phase formalizes trust, policy, evidence, and retrieval assets. Structure and actionability matter more here than visual flourish.
+
+
+
+Executive and admin surfaces
+This final phase serves secondary stakeholders. Build it after the core creation-to-runtime journey is stable and polished.
+
+
+
+4. Prototype flow build plan
+Wire only the flows that prove the product narrative early. A convincing first prototype should demonstrate creation, evaluation, release, deployment monitoring, and runtime investigation.
+5. Designer QA and handoff checklist
+
+--- TABLE 1 ---
+Use this brief to sequence the first production Figma file, decide what gets built on each page, and keep the team aligned on hierarchy, dependencies, prototype milestones, and review gates.
+
+--- TABLE 2 ---
+What this brief is for | How to use it | Definition of done
+• Translate the UX product strategy into a buildable Figma file.
+• Keep the first design pass disciplined and prototype-ready.
+• Reduce rework by locking foundations and page order early. | • Build pages in the recommended order.
+• Do not start detail-rich screens before shared components exist.
+• Gate each milestone with the acceptance checks in this brief. | • Shared library is stable.
+• P0 flows are clickable end to end.
+• High-risk states, approvals, and runtime diagnostics are represented.
+
+--- TABLE 3 ---
+Start with foundations
+Tokens, shell, navigation, feedback states, and core modules must be stable before page work accelerates. | Build hero flows first
+The first prototype should support creation, evaluation, release, deployment, and investigation. | Show trust signals clearly
+Risk, evidence, status, and approval state must be visible without opening deep diagnostics. | Keep complexity layered
+Every page should work at summary view first, then technical depth, then raw evidence.
+
+--- TABLE 4 ---
+Figma page | Primary purpose | Build notes
+01_Foundations | Tokens, grid, shell, layout rules, semantic states, and shared UI primitives. | Finish this before building most screens.
+02_Global Components | Overlays, command bar, filters, tables, banners, timeline, checklist, graph node, diff block. | Use component-first naming and variants.
+04_Screens/Home | Home Dashboard and notifications. | Calm summary-first command center.
+04_Screens/Studio | Brief, comparison, architecture canvas, tools, memory, debate, research. | This is the flagship workspace.
+04_Screens/Evaluation | Evaluation overview, failure detail, simulation review. | Three-layer model: summary, grouped failures, raw evidence.
+04_Screens/Release + Deployments | Release Readiness, Deployment Center, Canary Monitor, Version Diff. | Airlock between design and production.
+04_Screens/Runs + Observability | Runs Explorer, Run Detail, Trace & Tool Inspector, Observability Console. | Dense views, but still readable.
+04_Screens/Governance + Knowledge + Executive + Settings | Approval Packet, Governance Queue, Audit Timeline, Knowledge Explorer, Executive Portfolio, Settings. | Build after core journey is stable.
+
+--- TABLE 5 ---
+Build phase | What must exist by the end of the phase | Priority floor | Effort mix | Gate for moving on
+Foundations and shared system | 8 frames / key deliverables centered on foundations. | P0 | L, M, S | Shared library supports shell, nav, feedback, table, timeline, graph, checklist, diff, and overlays.
+Global and entry experience | 8 frames / key deliverables centered on global & entry. | P0 | M, S | Home, command palette, create-agent intake, and brief builder feel stable and coherent.
+Studio core workflow | 9 frames / key deliverables centered on studio core. | P0 | L, M, S | Builder can move from brief to architecture, config, evaluation, and release readiness.
+Studio extended and review surfaces | 4 frames / key deliverables centered on studio extended. | P1 | M | Evidence-first supporting screens add depth without breaking the main workflow.
+Runtime, runs, deployments, and debugging | 8 frames / key deliverables centered on runtime & deploy. | P0 | L, M, S | Run investigation, version changes, and deployment controls are review-ready.
+Governance and knowledge views | 5 frames / key deliverables centered on governance & knowledge. | P0 | L, M, S | Approval packet and governance surfaces are formal, structured, and trust-building.
+Executive and admin surfaces | 2 frames / key deliverables centered on executive & admin. | P2 | M | Portfolio and admin pages exist, but do not dilute the quality of core product flows.
+
+--- TABLE 6 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+8 | FND-001, FND-002, FND-003, FND-004, FND-005 | This phase establishes the non-negotiable shared system for the whole file | Pages created, sections named, naming convention documented
+
+--- TABLE 7 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+FND-001 | Foundations cover + page structure | P0 / S | Page labels, section dividers, naming guide | Entry: —
+Next: All pages | Pages created, sections named, naming convention documented
+FND-002 | Color, type, spacing, radius, elevation tokens | P0 / M | Token swatches, usage notes, semantic roles | Entry: —
+Next: All component work | Base tokens defined and reusable
+FND-003 | App shell + navigation patterns | P0 / M | Left nav, top bar, page title, action area | Entry: —
+Next: APP-001, all workspace frames | App shell built with variants for expanded/collapsed nav
+FND-004 | Command bar + filter + search set | P0 / M | Command input, result list, filter chips + | Entry: —
+Next: APP-002, RUN-001, OBS-001, KNO-001 | Search and filter patterns standardized
+FND-005 | Status chips, verdict banners, risk banners | P0 / S | Chip variants, pass/caution/fail banner, risk callouts | Entry: —
+Next: Studio, Deployments, Governance | Semantic feedback set ready with accessible states
+FND-006 | KPI cards, tables, timeline rows, checklist panel | P0 / L | Cards, data table, timeline row, checklist line item | Entry: —
+Next: Home, Runs, Governance, Release | Core data display components reusable and responsive
+FND-007 | Comparison cards, graph nodes, trace waterfall, diff blocks | P0 / L | Decision cards, architecture nodes, trace view + | Entry: —
+Next: STU-004, STU-005, RUN-003, DEP-003 | Complex visual patterns built before technical screens
+FND-008 | Side panel, notification items, approval action bar | P0 / M | Drawer, notification row, sticky approval footer | Entry: —
+Next: APP-003, STU-005, GOV-002 | Overlay behaviors consistent across product
+
+--- TABLE 8 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+8 | APP-001-A, APP-002-A, STU-001-A, STU-002-A | This phase defines first impression, orientation, and how new work begins | Balanced command-center overview with calm hierarchy
+
+--- TABLE 9 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+APP-001-A | Home Dashboard — Default | P0 / M | Recent agents, active runs, approvals queue + | Entry: —
+Next: STU-001, APP-003 | Balanced command-center overview with calm hierarchy
+APP-002-A | Global Command Palette — Open | P0 / S | Search field, grouped results, quick actions + | Entry: APP-001-A
+Next: Any primary workspace | Keyboard-first overlay is lightweight and fast to scan
+STU-001-A | Create Agent — Goal Intake Default | P0 / M | Goal input, domain, constraints + | Entry: APP-001-A
+Next: STU-002-A | Structured intake feels premium, not chat-only
+STU-002-A | Brief Builder — Default | P0 / M | Brief sections, editable summary, AI suggestions | Entry: STU-001-A
+Next: STU-004-A | User can edit and understand the brief quickly
+APP-001-B | Home Dashboard — Alert-heavy | P1 / S | Escalated alert stack, more failures, reduced quick actions | Entry: APP-001-A
+Next: RUN-002, GOV-001 | Severity is clear without overwhelming the page
+APP-003-A | Notifications Center — Default | P1 / S | Alerts, approvals, failures, mentions, filters | Entry: APP-001-A
+Next: RUN-002, GOV-001 | Actionable inbox with clear severity and next steps
+STU-001-B | Create Agent — Guided Follow-up | P1 / S | Inline follow-up prompts, partial answers, helper guidance | Entry: STU-001-A
+Next: STU-002-A | Follow-up questions feel structured and contextual
+STU-002-B | Brief Builder — Ready to Generate | P1 / S | Resolved sections, completion cues, primary CTA emphasis | Entry: STU-002-A
+Next: STU-004-A | Readiness is explicit and motivating
+
+--- TABLE 10 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+9 | STU-004-A, STU-004-B, STU-005-A, STU-007-A, STU-008-A | This phase contains the most strategic product surfaces | Decision hierarchy is clear and comparable
+
+--- TABLE 11 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+STU-004-A | Architecture Comparison Board — Default | P0 / L | Candidate cards, score pillars, rationale, risk matrix | Entry: STU-002-A
+Next: STU-005-A, STU-006-A | Decision hierarchy is clear and comparable
+STU-004-B | Architecture Comparison Board — Recommended | P0 / S | Recommended badge, stronger CTA, tradeoff callout | Entry: STU-004-A
+Next: STU-005-A | Recommendation is visible but not manipulative
+STU-005-A | Architecture Canvas — Default | P0 / L | Component graph, readable summary, lineage tags | Entry: STU-004-A
+Next: STU-007-A, STU-008-A | Graph supports understanding rather than visual noise
+STU-005-B | Architecture Canvas — Selected Node | P1 / S | Expanded node detail, evidence link, annotations | Entry: STU-005-A
+Next: STU-007-A, STU-008-A | Node detail is readable and actionable
+STU-007-A | Tools & Permissions Config — Default | P0 / M | Tool catalog, permission matrix, risk labels + | Entry: STU-005-A
+Next: STU-008-A, STU-009-A | Permission changes are explicit with no hidden side effects
+STU-008-A | Memory & Retrieval Config — Default | P0 / M | Source groups, retrieval mode, episodic memory + | Entry: STU-007-A
+Next: STU-009-A | Terminology between retrieval, episodic memory, and runtime context is clear
+STU-009-A | Evaluation Lab — Overview Pass/Caution | P0 / L | Verdict summary, benchmark clusters, scenario list + | Entry: STU-008-A
+Next: STU-010-A, STU-011-A, STU-012-A | Summary-first evaluation review works for mixed audiences
+STU-009-B | Evaluation Lab — Fail State | P1 / S | Fail verdict, blocker language, strongest failure clusters | Entry: STU-009-A
+Next: STU-010-A, STU-011-A | Blocking conditions are unmistakable and actionable
+STU-012-A | Release Readiness — Default | P0 / M | Release checklist, change summary, evidence, blockers | Entry: STU-009-A
+Next: GOV-002-A, DEP-001-A | Airlock quality is strong: clear evidence and blockers
+
+--- TABLE 12 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+4 |  | This phase adds supporting context and evidence | Research bridge is useful without slowing the main flow
+
+--- TABLE 13 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+STU-003-A | Research Summary — Default | P1 / M | Source evidence, assumptions, citations, missing gaps | Entry: STU-002-A
+Next: STU-004-A | Research bridge is useful without slowing the main flow
+STU-006-A | Debate Review — Default | P1 / M | Proposal lane, critique lane, revision lane + | Entry: STU-004-A
+Next: STU-005-A | Reasoning is structured, not transcript-first
+STU-010-A | Evaluation Failure Detail — Default | P1 / M | Failure summary, root cause clues, evidence, remediation | Entry: STU-009-A
+Next: RUN-003-A | Engineering detail is deep but still readable
+STU-011-A | Scenario Simulation Review — Default | P1 / M | Scenario metadata, expected vs observed, weak spots | Entry: STU-009-A
+Next: STU-012-A | Synthetic-vs-live distinction is always visible
+
+--- TABLE 14 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+8 | RUN-002-A, RUN-003-A, DEP-001-A, DEP-003-A | This phase turns the system into an operational product | High-volume operations view is still scannable
+
+--- TABLE 15 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+RUN-001-A | Runs Explorer — Default | P1 / M | Runs table, filters, saved views, export action | Entry: APP-003-A
+Next: RUN-002-A | High-volume operations view is still scannable
+RUN-002-A | Run Detail Timeline — Default | P0 / M | Run events, task tree, summary rail, linked artifacts | Entry: RUN-001-A, DEP-002-A
+Next: RUN-003-A, OBS-001-A | Causality and time sequence are easy to follow
+RUN-003-A | Trace & Tool Inspector — Default | P0 / L | Latency waterfall, tool calls, payload detail + | Entry: RUN-002-A
+Next: OBS-001-A, DEP-003-A | Technical view uses progressive disclosure
+DEP-001-A | Deployment Center — Default | P0 / M | Environments, versions, rollout controls, health | Entry: STU-012-A, GOV-002-A
+Next: DEP-002-A, DEP-003-A | Release control surface feels confident and reversible
+DEP-003-A | Version Diff — Default | P0 / M | Changed prompts, tools, memory, model policy, eval delta | Entry: DEP-001-A, GOV-002-A
+Next: GOV-002-A | Changed scope is visible without noise
+RUN-001-B | Runs Explorer — High-volume Filtered | P1 / S | Heavy filter state, saved view chips, dense table rows | Entry: RUN-001-A
+Next: RUN-002-A | Power-user state still remains controlled
+DEP-002-A | Canary Rollout Monitor — Default | P1 / M | Canary vs baseline charts, confidence notes, rollout actions | Entry: DEP-001-A
+Next: RUN-002-A, DEP-001-A | Relative delta is understandable, not just raw numbers
+OBS-001-A | Observability Console — Default | P1 / L | Metrics, logs, traces + | Entry: RUN-003-A
+Next: DEP-003-A, RUN-002-A | Default view is readable and not only for experts
+
+--- TABLE 16 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+5 | GOV-002-A | This phase formalizes trust, policy, evidence, and retrieval assets | Feels curated and trustworthy, not raw storage
+
+--- TABLE 17 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+KNO-001-A | Knowledge Explorer — Default | P1 / M | Source groups, search, metadata, preview | Entry: STU-008-A
+Next: KNO-002-A | Feels curated and trustworthy, not raw storage
+KNO-002-A | Source Detail & Index Status — Default | P2 / S | Index health, permissions, retrieval quality, errors | Entry: KNO-001-A
+Next: STU-008-A | Freshness and health are obvious at a glance
+GOV-001-A | Governance Queue — Default | P1 / M | Approval requests, policy violations, blocked releases + | Entry: APP-003-A
+Next: GOV-002-A | Formal queue is clear and structured
+GOV-002-A | Approval Packet — Default | P0 / L | Executive summary, evidence, risks + | Entry: STU-012-A, GOV-001-A
+Next: DEP-001-A, GOV-003-A, DEP-003-A | This is the trust surface where a decision becomes formal
+GOV-003-A | Audit Timeline — Default | P1 / M | Chronological audit events, actor, action + | Entry: GOV-002-A
+Next: DEP-001-A | Audit review is rigorous but understandable
+
+--- TABLE 18 ---
+Frames in phase | P0 anchors | Main risk if rushed | Design emphasis
+2 |  | This final phase serves secondary stakeholders | Plain-English summary comes first with minimal jargon
+
+--- TABLE 19 ---
+Frame ID | Frame name | Priority | Must-have modules | Prototype role / next link | Review note
+EXE-001-A | Executive Portfolio — Default | P2 / M | Production agents, outcomes, quality trends + | Entry: APP-001-A
+Next: DEP-001-A | Plain-English summary comes first with minimal jargon
+SET-001-A | Settings & Policy Profiles — Default | P2 / M | Policy presets, access control, notifications + | Entry: APP-001-A
+Next: GOV-001-A | Admin complexity remains isolated from core workflows
+
+--- TABLE 20 ---
+Seq | Flow ID | Flow name | Frames to wire | Priority | Success outcome
+1 | FL-01 | Create a new agent | APP-001-A → STU-001-A → STU-002-A → STU-004-A → STU-005-A → STU-007-A → STU-008-A → STU-009-A → STU-012-A | P0 | User can complete the primary creation path end-to-end
+2 | FL-03 | Evaluate and approve candidate | STU-005-A → STU-009-A → STU-010-A / STU-011-A → STU-012-A → GOV-002-A | P0 | User can understand verdict, inspect risk, and prepare approval packet
+3 | FL-04 | Deploy and monitor canary | GOV-002-A → DEP-001-A → DEP-002-A → RUN-002-A → DEP-001-A | P0 | User can approve release, start canary, inspect health, and roll back/promote
+4 | FL-05 | Investigate runtime failure | APP-003-A → RUN-002-A → RUN-003-A → OBS-001-A → DEP-003-A | P1 | Operator can isolate a failure and connect it to system context or version change
+5 | FL-06 | Governance approval | GOV-001-A → GOV-002-A → DEP-003-A → GOV-003-A → DEP-001-A | P1 | Governance owner can review evidence and authorize or reject a release
+6 | FL-02 | Compare and choose architecture | STU-002-A → STU-004-A → STU-006-A → STU-005-A | P1 | Builder can compare, understand tradeoffs, and pick a finalist
+
+--- TABLE 21 ---
+Checkpoint | What to confirm before handoff
+Foundations | Spacing, type, tokens, status semantics, shell behavior, and core components match across pages.
+Screen readiness | Each P0 screen has a clean default state, at least one meaningful edge state, and named frames that match the workbook.
+Prototype quality | P0 flows are connected, interactive hotspots are obvious, and transitions preserve user context.
+Trust signals | Risk, evidence, approvals, and state changes are visible in summary view before deeper inspection.
+Data realism | Use believable sample content, not lorem ipsum, for agent names, failures, evaluations, and releases.
+Review package | Frame names, section names, and comments are ready for design review and engineering translation.
+
+--- TABLE 22 ---
+Recommended next step
+Once this brief is accepted, use it to annotate the Figma file page by page: start with Foundations and Global Components, then build the P0 prototype flows, then expand supporting evidence, governance, and executive surfaces.

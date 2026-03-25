@@ -1,0 +1,266 @@
+Agent Architect Pro — API & Interface Contract Pack
+Detailed contract pack for the recommended production architecture: request/response schemas, event contracts, identity, error handling, and compatibility rules.
+
+1. Purpose and scope
+This document defines the interface contracts required to implement Agent Architect Pro as a governed multi-agent platform. It covers synchronous APIs, asynchronous events, identity and security envelopes, versioning, validation rules, idempotency expectations, and baseline service-level assumptions.
+• The platform must support requirement intake, planning, retrieval, evaluation, deployment, observability, and continuous improvement.
+• The primary control-plane roles are Supervisor, Planner, Release Manager, and Identity/Policy services.
+• The primary execution-plane roles are Swarm Orchestrator, Runtime workers, Tool Broker, Model Gateway, and Result Aggregation.
+2. Canonical design rules
+
+3. Common envelopes
+3.1 Standard request metadata
+
+3.2 Standard success envelope
+
+3.3 Standard error envelope
+
+4. Identity model
+
+5. Synchronous API contracts
+
+5.1 Supervisor — POST /v1/runs
+
+
+• Required validations: objective present, tenant_id present, cost/deadline inside tenant policy limits.
+• Idempotency: repeated calls with the same client_request_id within 24h must return the same run_id unless the request payload differs.
+• State machine: planning → queued → running → awaiting_review → completed | failed | cancelled.
+5.2 Planner — POST /v1/plans
+
+
+5.3 Retrieval — POST /v1/retrieve/search
+
+
+5.4 Tool Broker — POST /v1/tools/execute
+
+• Policy check precedes execution. Missing grant or expired token returns AUTHZ_DENIED.
+• All successful and blocked calls generate AuditEvents.
+• Long-running tools should return an operation_id and support callback or polling semantics.
+5.5 Model Gateway — POST /v1/models/generate
+
+• The gateway hides provider/model selection. Clients specify policy and task_type, not vendor-specific parameters.
+• Responses include token counts, latency_ms, model_route, and cache_hit metadata.
+• Streaming mode is optional; the same contract supports both synchronous and chunked response delivery.
+6. Event contracts (asynchronous)
+
+
+7. Security, policy, and compatibility
+
+8. Error codes
+
+9. Acceptance checklist
+• Every service must publish an OpenAPI spec or protobuf equivalent derived from these contracts.
+• Every privileged action must produce a matching AuditEvent with trace_id and actor identity.
+• Every client SDK must expose idempotency, correlation IDs, and standard error parsing.
+• Contract tests must validate both happy-path and policy-failure behavior for each critical endpoint.
+• UI and workflow surfaces should consume only documented fields and must ignore additive fields they do not recognize.
+
+--- TABLE 1 ---
+Target audience: platform architects, backend engineers, ML engineers, UI engineers, QA, and DevOps. This pack is implementation-facing and aligned to the lifecycle Brief → Design → Evaluate → Deploy → Monitor → Improve.
+
+--- TABLE 2 ---
+Rule | Contract decision
+API style | JSON over HTTPS for public/service APIs. Internal high-throughput service-to-service calls may use gRPC behind the same logical contract.
+Versioning | URI major versioning: /v1/… . Non-breaking additive changes are allowed within v1. Breaking changes require /v2.
+Authentication | All privileged calls require a bearer token. Runtime workers use short-lived workload tokens issued by the Token Service.
+Idempotency | POST operations that create or trigger state transitions must accept Idempotency-Key or client_request_id.
+Tracing | Every request and event must carry trace_id, run_id when available, and task_attempt_id when execution-related.
+Error model | All services return a standard error envelope with code, message, retryability, correlation id, and optional field violations.
+
+--- TABLE 3 ---
+{
+  "request_meta": {
+    "tenant_id": "tenant-acme",
+    "trace_id": "trc_01H...",
+    "client_request_id": "req_123",
+    "actor_id": "usr_456",
+    "policy_profile": "enterprise-strict",
+    "requested_by_role": "builder"
+  }
+}
+
+--- TABLE 4 ---
+{
+  "status": "ok",
+  "data": { },
+  "meta": {
+    "trace_id": "trc_01H...",
+    "version": "v1",
+    "generated_at": "2026-03-22T10:15:00Z"
+  }
+}
+
+--- TABLE 5 ---
+{
+  "status": "error",
+  "error": {
+    "code": "POLICY_VIOLATION",
+    "message": "Tool call blocked by policy.",
+    "retryable": false,
+    "correlation_id": "corr_789",
+    "details": {
+      "policy_rule": "TOOL.RESTRICTED.NETWORK",
+      "violations": [
+        {"field": "tool_name", "reason": "blocked"}
+      ]
+    }
+  }
+}
+
+--- TABLE 6 ---
+Identifier | Purpose | Issuer / owner
+agent_spec_id | Logical design definition for an agent family. | Design/build pipeline
+agent_version_id | Immutable released implementation of that design. | Release Manager
+runtime_instance_id | Concrete worker/container executing tasks. | Runtime Manager
+run_id | End-to-end execution of one user/API request. | Supervisor
+task_attempt_id | A single scheduled execution attempt for a task. | Swarm Orchestrator
+
+--- TABLE 7 ---
+Service | Endpoint | Purpose
+Supervisor | POST /v1/runs | Start a governed run from a user or system request.
+Supervisor | GET /v1/runs/{run_id} | Inspect run state, milestones, and summary.
+Supervisor | POST /v1/runs/{run_id}/cancel | Cancel an in-flight run.
+Planner | POST /v1/plans | Compile a goal into a budgeted task DAG.
+Retrieval | POST /v1/retrieve/search | Search knowledge, episodes, and artifacts.
+Identity | POST /v1/identity/tokens/issue | Issue a short-lived workload token.
+Tool Broker | POST /v1/tools/execute | Execute an allowed tool with audit metadata.
+Model Gateway | POST /v1/models/generate | Run text generation for reasoning and drafting.
+Evaluation | POST /v1/evaluations/candidates | Evaluate a candidate package against benchmarks.
+Release | POST /v1/releases/promote | Promote a signed candidate to a target environment.
+Audit | GET /v1/audit/runs/{run_id} | Query immutable evidence associated with a run.
+
+--- TABLE 8 ---
+{
+  "request_meta": {"tenant_id": "tenant-acme", "client_request_id": "req_123"},
+  "objective": "Design a medical research analyst agent",
+  "constraints": {
+    "deadline_ms": 180000,
+    "max_cost_usd": 40,
+    "risk_profile": "high-regulated"
+  },
+  "inputs": {
+    "domain": "healthcare",
+    "required_outputs": ["brief", "architecture", "evaluation_plan"]
+  }
+}
+
+--- TABLE 9 ---
+{
+  "status": "ok",
+  "data": {
+    "run_id": "run_01J...",
+    "state": "planning",
+    "next_action": "plan_requested"
+  },
+  "meta": {"trace_id": "trc_01H..."}
+}
+
+--- TABLE 10 ---
+{
+  "request_meta": {"tenant_id": "tenant-acme", "trace_id": "trc_01H..."},
+  "goal": "Design a financial risk analyst agent",
+  "budget": {"max_tokens": 200000, "max_cost_usd": 25},
+  "policy_profile": "enterprise-strict"
+}
+
+--- TABLE 11 ---
+{
+  "status": "ok",
+  "data": {
+    "plan_id": "plan_01J...",
+    "tasks": [
+      {"task_id": "t1", "type": "retrieve_context", "deps": []},
+      {"task_id": "t2", "type": "generate_architectures", "deps": ["t1"]},
+      {"task_id": "t3", "type": "evaluate_candidates", "deps": ["t2"]}
+    ]
+  }
+}
+
+--- TABLE 12 ---
+{
+  "request_meta": {"tenant_id": "tenant-acme", "trace_id": "trc_01H..."},
+  "query": "medical evidence hierarchy",
+  "scope": ["documents", "episodes", "artifacts"],
+  "filters": {"tags": ["healthcare"], "freshness_days": 365},
+  "top_k": 8
+}
+
+--- TABLE 13 ---
+{
+  "status": "ok",
+  "data": {
+    "results": [
+      {"source_id": "doc_101", "title": "Clinical evidence standard", "score": 0.91},
+      {"source_id": "ep_298", "title": "Prior regulated-agent episode", "score": 0.84}
+    ]
+  }
+}
+
+--- TABLE 14 ---
+{
+  "request_meta": {"tenant_id": "tenant-acme", "trace_id": "trc_01H..."},
+  "runtime_instance_id": "rt_123",
+  "run_id": "run_01J...",
+  "task_attempt_id": "ta_456",
+  "tool_name": "retrieval.search",
+  "tool_grant_id": "grant_789",
+  "payload": {"query": "evidence standard"}
+}
+
+--- TABLE 15 ---
+{
+  "request_meta": {"tenant_id": "tenant-acme", "trace_id": "trc_01H..."},
+  "task_type": "reasoning",
+  "model_policy": {"latency_tier": "standard", "max_cost_usd": 0.50},
+  "context_refs": ["doc_101", "ep_298"],
+  "messages": [{"role": "system", "content": "You are a senior AI architect."}, {"role": "user", "content": "Generate 3 architectures."}]
+}
+
+--- TABLE 16 ---
+Topic | Producer | Consumer(s) | Purpose
+run.created | Supervisor | Planner, Observability | Lifecycle start signal for a new run.
+plan.ready | Planner | Supervisor | Published when a task DAG is compiled.
+task.submitted | Supervisor | Swarm | Runnable task issued for scheduling.
+task.completed | Runtime | Supervisor, Aggregator | Task result available.
+episode.written | Episodic Memory | Retrieval, Analytics | Reusable learning artifact stored.
+audit.event | All privileged services | Audit Ledger | Append-only evidence stream.
+eval.completed | Evaluation Service | Release Manager | Candidate evaluation evidence.
+release.promoted | Release Manager | Observability, Dashboard | Deployment state transition event.
+
+--- TABLE 17 ---
+{
+  "topic": "task.completed",
+  "event_version": "1.0",
+  "event_id": "evt_01J...",
+  "trace_id": "trc_01H...",
+  "run_id": "run_01J...",
+  "task_attempt_id": "ta_456",
+  "producer": "runtime-worker",
+  "occurred_at": "2026-03-22T10:33:00Z",
+  "payload": {
+    "task_id": "t3",
+    "status": "succeeded",
+    "outputs": {"artifact_refs": ["cand_001"]},
+    "cost_usd": 1.42,
+    "latency_ms": 4820
+  }
+}
+
+--- TABLE 18 ---
+Area | Required rule
+Transport | TLS everywhere. Internal service mesh mTLS recommended for service-to-service calls.
+Tokens | Workload tokens should be short-lived, audience-bound, and least-privilege.
+PII handling | Sensitive fields must be tagged and excluded from broad observability payloads.
+Schema evolution | Additive fields only within v1. Consumers must ignore unknown fields.
+Deprecation | Deprecated fields require notice in contract docs and a minimum two-release compatibility window.
+Rate limits | Enforce per-tenant and per-service quotas with explicit 429 handling and retry-after guidance.
+
+--- TABLE 19 ---
+Code | HTTP | Meaning | Retry?
+VALIDATION_FAILED | 400 | Input payload or field rules failed. | No
+AUTHN_REQUIRED | 401 | Missing or invalid credentials. | No
+AUTHZ_DENIED | 403 | Caller lacks rights or tool grant. | No
+NOT_FOUND | 404 | Requested run, plan, token, or artifact not found. | No
+CONFLICT | 409 | State transition conflict or idempotency mismatch. | Maybe
+RATE_LIMITED | 429 | Quota exceeded. | Yes
+UPSTREAM_TIMEOUT | 504 | Dependent service or model route timed out. | Yes

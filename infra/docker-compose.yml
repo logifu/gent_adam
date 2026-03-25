@@ -1,0 +1,240 @@
+# Agent Architect Pro — Local Development Stack
+# Docker Compose for PostgreSQL, Redis, Kafka, Temporal, MinIO, Keycloak, OTel
+# Usage: docker compose up -d
+
+services:
+  # ──────────────────────────────────────────────────
+  # Primary Database — PostgreSQL 16 + pgvector
+  # ──────────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: aap-postgres
+    environment:
+      POSTGRES_USER: aap
+      POSTGRES_PASSWORD: aap_dev_password
+      POSTGRES_DB: agent_architect_pro
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aap"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────────
+  # Caching & Coordination — Redis
+  # ──────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: aap-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────────
+  # Event Backbone — Redpanda (Kafka-compatible, simpler ops)
+  # ──────────────────────────────────────────────────
+  redpanda:
+    image: redpandadata/redpanda:latest
+    container_name: aap-redpanda
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 512M
+      - --overprovisioned
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr internal://redpanda:8082,external://localhost:18082
+    ports:
+      - "19092:19092"  # Kafka API
+      - "18082:18082"  # Pandaproxy (REST)
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redpanda Console — Kafka UI for dev
+  redpanda-console:
+    image: redpandadata/console:latest
+    container_name: aap-redpanda-console
+    depends_on:
+      redpanda:
+        condition: service_healthy
+    ports:
+      - "8484:8080"
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+
+  # ──────────────────────────────────────────────────
+  # Workflow Orchestration — Temporal
+  # ──────────────────────────────────────────────────
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: aap-temporal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=aap
+      - POSTGRES_PWD=aap_dev_password
+      - POSTGRES_SEEDS=postgres
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    ports:
+      - "7233:7233"
+
+  temporal-ui:
+    image: temporalio/ui:latest
+    container_name: aap-temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    ports:
+      - "8233:8080"
+
+  # ──────────────────────────────────────────────────
+  # Object Storage — MinIO (S3-compatible)
+  # ──────────────────────────────────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: aap-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────────
+  # Identity Provider — Keycloak (OIDC/OAuth2)
+  # ──────────────────────────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: aap-keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/agent_architect_pro
+      KC_DB_USERNAME: aap
+      KC_DB_PASSWORD: aap_dev_password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ──────────────────────────────────────────────────
+  # Observability — OpenTelemetry Collector
+  # ──────────────────────────────────────────────────
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: aap-otel-collector
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol/config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8888:8888"   # Prometheus metrics (self)
+    depends_on:
+      - tempo
+      - loki
+
+  # ──────────────────────────────────────────────────
+  # Distributed Tracing — Grafana Tempo
+  # ──────────────────────────────────────────────────
+  tempo:
+    image: grafana/tempo:latest
+    container_name: aap-tempo
+    command: ["-config.file=/etc/tempo/tempo.yaml"]
+    volumes:
+      - ./tempo.yaml:/etc/tempo/tempo.yaml
+      - tempo_data:/var/tempo
+    ports:
+      - "3200:3200"   # Tempo API
+      - "14268:14268" # Jaeger ingest (HTTP)
+      - "9411:9411"   # Zipkin ingest
+
+  # ──────────────────────────────────────────────────
+  # Log Aggregation — Grafana Loki
+  # ──────────────────────────────────────────────────
+  loki:
+    image: grafana/loki:latest
+    container_name: aap-loki
+    command: ["-config.file=/etc/loki/loki.yaml"]
+    volumes:
+      - ./loki.yaml:/etc/loki/loki.yaml
+      - loki_data:/loki
+    ports:
+      - "3100:3100"   # Loki API
+
+  # ──────────────────────────────────────────────────
+  # Metrics — Prometheus
+  # ──────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aap-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+      - "--web.enable-remote-write-receiver"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"   # Prometheus UI
+
+  # ──────────────────────────────────────────────────
+  # Dashboards — Grafana
+  # ──────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aap-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3001:3000"   # Grafana UI (3001 to avoid conflict with Next.js)
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+
+volumes:
+  postgres_data:
+  redpanda_data:
+  minio_data:
+  tempo_data:
+  loki_data:
+  prometheus_data:
+  grafana_data:

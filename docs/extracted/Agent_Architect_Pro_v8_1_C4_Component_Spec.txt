@@ -1,0 +1,158 @@
+Agent Architect Pro v8.1 — C4-Style Component Specification
+Chief ML Engineer version. This document translates the blueprint into implementable context, containers, components, contracts, and deployment rules.
+
+1. Purpose and design intent
+This specification turns the conceptual blueprint into a buildable system. The design target is a production-safe agent platform where orchestration, execution, retrieval, identity, evaluation, and observability are separated into clear planes with hard interfaces and auditable behavior.
+
+2. C4 Level 1 — System context
+The platform sits between external requesters, enterprise data systems, model infrastructure, operators, and the deployment toolchain. It receives goals, plans and executes work through sandboxed workers, retrieves context, records audit evidence, and returns a governed result.
+
+3. C4 Level 2 — Container view
+The recommended architecture is organized into six planes. Each plane may map to one or more deployable services, but ownership and interfaces remain consistent even if implementation details evolve.
+
+4. C4 Level 3 — Component view
+4.1 Ingress & Control components
+
+4.2 Execution components
+
+4.3 Knowledge and Trust components
+
+4.4 Improvement and Operations components
+
+5. Canonical runtime identities and contracts
+Do not use one overloaded “agent ID.” Separate the major nouns so operations, compliance, and debugging stay tractable.
+
+Core contracts
+
+6. Canonical request flow
+
+7. Non-functional requirements and release policy
+
+8. Recommended implementation sequence
+• Phase 1: build the production core — Gateway, Supervisor, Planner, Swarm, Runtime Manager, Sandbox, Tool Broker, Retrieval, Model Gateway, Identity Registry, Audit, baseline observability.
+• Phase 2: harden governance — Policy Enforcer, signed workload tokens, artifact signing, tenant quotas, rollback automation, release manager.
+• Phase 3: add the quality plane — Evaluation, Replay, Simulation, benchmark packs, safety regression suites.
+• Phase 4: add the improvement plane — Episodic memory, experimentation, meta-learning, pattern mining, recommendation support.
+• Phase 5: only then add advanced research features such as debate, architecture search, or selective evolutionary search.
+
+
+--- TABLE 1 ---
+Scope: production architecture for a multi-agent platform with strict boundaries between control, execution, knowledge, trust, improvement, and operations.
+
+--- TABLE 2 ---
+• Keep the online request path deterministic, observable, budgeted, and easy to roll back.
+• Move simulation, architecture search, self-improvement, and replay into an offline improvement plane.
+• Use one controlled choke point for model access and one controlled choke point for tool access.
+• Separate identity registry from audit evidence; do not overload a single “agent ID” with every meaning.
+
+--- TABLE 3 ---
+Actor / external system | Interaction with Agent Architect Pro v8.1 | Primary boundary or trust concern
+User / API client | Submits requests, receives results, monitors run status, and may supply tenant policy or budget context. | Authentication, rate limiting, tenant isolation.
+Enterprise knowledge sources | Documents, APIs, tickets, code, artifacts, and historical run outputs indexed for retrieval. | Authorization, freshness, data lineage, source trust.
+Model infrastructure | Reasoning, code, embedding, reranking, and evaluation inference behind the Model Gateway. | Quota isolation, latency, cost, model policy.
+Platform operators | Observe system health, approve promotions, respond to incidents, and tune policy. | Least privilege, auditability, rollback authority.
+CI/CD and build systems | Build, sign, evaluate, and promote deployable agent artifacts and policy bundles. | Artifact integrity, release gates, reproducibility.
+
+--- TABLE 4 ---
+Container / plane | Core services | What it owns | What it explicitly does not own
+Ingress & Control | API Gateway
+Auth Service
+Supervisor
+Planner
+Release Manager | Request intake, authn/authz, run lifecycle, plan compilation, approvals, retries, release policy. | Worker placement, model selection internals, tool execution.
+Execution | Swarm Orchestrator
+Runtime Manager
+Sandbox Executor
+Tool Broker
+Policy Enforcer
+Result Aggregator | Task scheduling, worker lifecycle, sandboxed execution, mediated tool calls, policy checks, result fan-in. | Business-level planning, release promotion, source-of-truth artifact storage.
+Knowledge | Retrieval Service
+Episodic Memory Service
+Vector Index
+Artifact Catalog
+Knowledge DB | Semantic retrieval, run summaries, indexing, artifact discovery, persisted run and plan state. | Direct execution, deployment, authentication.
+Trust | Identity Registry
+Token Service
+Audit Ledger
+Artifact Signer
+Policy Store | Workload identity, signed tokens, append-only audit chains, artifact signatures, policy data. | Task execution, retrieval ranking, planning logic.
+Improvement | Evaluation Service
+Simulation Service
+Replay Service
+Experimentation
+Meta-Learning | Offline tests, scenario generation, replay against baselines, candidate ranking, evidence generation. | Direct production deployment, live request serving.
+Operations | Metrics
+Logs
+Traces
+Alert Manager
+Executive Dashboard | Observability, alerting, SLO tracking, incident forensics, release health visibility. | Business logic, artifact mutation.
+
+--- TABLE 5 ---
+Component | Responsibility | Inputs / outputs | Implementation notes
+API Gateway | Tenant-aware request intake, authentication, validation, and rate limiting. | HTTP/gRPC request in; authenticated run request out. | Keep thin. No business workflow logic.
+Supervisor Service | Owns run state, retries, deadlines, budgets, approval gates, and final assembly. | RunSpec in; RunStatus events and task submissions out. | Must not dispatch workers directly.
+Planner Service | Compiles a goal into a Task DAG with dependencies and budget metadata. | Goal + constraints in; PlanSpec out. | Treat as compiler, not scheduler.
+Release Manager | Evaluates evidence and promotes or rolls back signed artifacts. | EvaluationReport in; deployment actions out. | No direct mutation of running workers.
+
+--- TABLE 6 ---
+Component | Responsibility | Key data objects | Hard rule
+Swarm Orchestrator | Queues runnable tasks, chooses workers, controls concurrency and backpressure. | TaskSpec, WorkerCapacity, QueueStatus. | Owns placement only; not business logic.
+Runtime Manager | Starts and stops workers, tracks health, accepts assignments. | RuntimeInstance, Heartbeat, CapacityReport. | Keep workers replaceable.
+Sandbox Executor | Provides isolated compute with egress, filesystem, and resource controls. | SandboxPolicy, ResourceQuota. | No unrestricted network or credentials.
+Tool Broker | Mediates every external tool/API call with credential brokering and audit logging. | ToolGrant, ToolCall, ToolResult. | Every external action passes through here.
+Policy Enforcer | Checks step limits, tool limits, tenant policy, approval requirements. | PolicyBundle, Decision, ViolationEvent. | Fail closed on missing policy.
+Result Aggregator | Combines task outputs and exposes normalized results back to the Supervisor. | TaskResult, AggregatedResult. | Keep deterministic and schema-driven.
+
+--- TABLE 7 ---
+Component | Role | Storage / contract | Guidance
+Retrieval Service | Semantic retrieval, ranking, grounding context selection. | RetrievalRequest, SourceRecord, Vector hits. | Own semantic memory only.
+Episodic Memory Service | Stores reusable run summaries and tool traces. | EpisodeSummary, EpisodeQuery. | Useful for reuse; not source-of-truth transactional state.
+Artifact Catalog | Tracks built artifacts, bundles, prompt packages, and manifests. | ArtifactManifest, BuildRecord. | Support search and lineage.
+Identity Registry | Maintains agent versions, workers, and workload identity records. | AgentSpec, AgentVersion, RuntimeInstance. | Back with Postgres in v1.
+Token Service | Issues signed workload tokens for workers and tool access. | RuntimeToken, TokenClaims. | Short-lived, least privilege.
+Audit Ledger | Append-only evidence stream with hash chaining per event stream. | AuditEvent. | Tamper evident without blockchain dependency.
+Artifact Signer | Signs deployable artifacts and policy bundles. | SignedArtifact. | Use KMS/HSM-backed keys.
+
+--- TABLE 8 ---
+Component | Role | Output | Boundary
+Evaluation Service | Runs benchmark suites, regressions, safety checks, and quality scoring. | EvaluationReport. | Offline or pre-release only.
+Simulation Service | Creates synthetic scenarios and stress tests for tool failures, ambiguity, and scale. | ScenarioPack, SimulationResult. | Use a separate quota pool from production.
+Replay Service | Replays historical traffic against candidate artifacts and compares with the baseline. | ReplayDiff. | Never on the critical path of live requests.
+Meta-Learning | Suggests candidate strategies or designs from historical evidence. | CandidateArtifact, Recommendation. | No direct path to production.
+Operations Stack | Captures metrics, logs, traces, alerts, and executive dashboards. | SLO status, incident evidence. | Must observe all planes with common IDs.
+
+--- TABLE 9 ---
+Identifier | Meaning | Created by | Typical lifetime
+agent_spec_id | Logical design definition for an agent family. | Build / design pipeline | Long-lived until superseded.
+agent_version_id | Immutable released implementation of that design. | Release Manager | Long-lived; never mutated.
+runtime_instance_id | A concrete worker or container executing tasks. | Runtime Manager | Short-lived or rotating.
+run_id | One end-to-end request execution. | Supervisor | Per user/API request.
+task_attempt_id | One execution attempt for a task. | Swarm Orchestrator | Per retry / placement attempt.
+
+--- TABLE 10 ---
+Contract | Purpose | Minimum fields
+RunSpec | Starts a governed run. | tenant_id, objective, budget, deadline, policy_profile
+PlanSpec | Task DAG with dependencies and budgets. | plan_id, tasks[], max_cost, max_tokens, deadline_ms
+TaskSpec | Runnable work unit for a worker. | task_id, run_id, task_type, deps, tool_policy, context_refs
+TaskResult | Normalized worker result. | task_id, status, outputs, tool_calls, cost, latency_ms
+EvaluationReport | Evidence for canary or rejection. | candidate_id, baseline_version, quality, cost, latency, safety, recommendation
+AuditEvent | Tamper-evident evidence record. | run_id, task_attempt_id, actor, action, timestamp, prev_hash, hash
+
+--- TABLE 11 ---
+Step | Sequence
+1 | Gateway authenticates the request and passes an authorized RunSpec to the Supervisor.
+2 | Supervisor creates a run_id, applies the budget and policy profile, and asks the Planner for a PlanSpec.
+3 | Planner returns a task DAG; the Supervisor emits runnable TaskSpec objects to the Swarm.
+4 | Swarm selects workers and assigns task_attempt_id values to concrete runtime instances.
+5 | Runtime fetches a short-lived token, retrieves context, calls the Model Gateway, and invokes tools only via the Tool Broker.
+6 | Policy Enforcer checks limits and approval conditions throughout execution; violations fail closed and are audited.
+7 | Result Aggregator normalizes outputs and returns the aggregate to the Supervisor for final assembly.
+8 | Metrics, logs, traces, and AuditEvents are emitted end-to-end; release evidence is later consumed by the Improvement and Release planes.
+
+--- TABLE 12 ---
+Domain | Required policy
+Availability | Treat the online path as a service platform: clear SLOs, graceful degradation, and fast rollback matter more than clever autonomy.
+Security | No raw credentials inside workers. Every sensitive call uses short-lived tokens, mediated tools, and auditable decisions.
+Observability | All planes must emit structured logs and distributed traces using run_id and task_attempt_id as first-class correlation keys.
+Cost control | Enforce budgets at plan time and at runtime. Simulation and replay must use isolated model quotas from live traffic.
+Release management | No experiment or self-improved candidate deploys directly. Signed artifact + EvaluationReport + canary are mandatory.

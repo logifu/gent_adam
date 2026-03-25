@@ -1,0 +1,58 @@
+Agent Architect Pro v8.1 — One-Page Architecture Table
+Operating view for the recommended production architecture: six planes, core services, contracts, and hard engineering rules.
+
+
+--- TABLE 1 ---
+Executive stance: keep the online path boring and reliable; move simulation, search, and self-improvement into a gated offline improvement plane.
+
+--- TABLE 2 ---
+Plane | Core services | Primary responsibility | Key contracts / data objects | Non-negotiable rules
+Ingress & Control | API Gateway
+Auth Service
+Supervisor
+Planner
+Release Manager | Accept requests, authenticate, create run state, compile the goal into a task DAG, enforce budgets, retries, approvals, and release policy. | RunSpec
+PlanSpec
+ExecutionBudget
+RunStatus events | Supervisor owns lifecycle only. Planner owns decomposition only. No direct worker dispatch from Supervisor.
+Execution | Swarm Orchestrator
+Runtime Manager
+Sandbox Executor
+Tool Broker
+Policy Enforcer
+Result Aggregator | Queue runnable tasks, place work on workers, execute inside a sandbox, mediate tool access, checkpoint state, and merge results. | TaskSpec
+TaskResult
+ToolGrant
+WorkerHeartbeat | Every external action goes through the Tool Broker. Runtime workers stay thin and stateless where possible.
+Knowledge | Retrieval Service
+Episodic Memory Service
+Vector Index
+Artifact Catalog
+Knowledge DB | Provide semantic retrieval, reusable run summaries, indexed artifacts, and authoritative stored state for plans, runs, and outputs. | RetrievalRequest
+EpisodeSummary
+ArtifactManifest
+SourceRecord | RAG owns semantic memory only. Runtime scratchpad is not the system of record.
+Trust | Identity Registry
+Token Service
+Audit Ledger
+Artifact Signer
+Policy Store | Issue workload identity, authorize actions, maintain tamper-evident audit streams, and sign deployable artifacts and policies. | AgentVersion
+RuntimeToken
+AuditEvent
+SignedArtifact | Use Postgres + append-only audit + signatures in v1; do not make blockchain a hot-path dependency.
+Improvement | Evaluation Service
+Simulation Service
+Replay Service
+Experimentation
+Meta-Learning | Run offline benchmarks, replay historical traffic, stress candidate designs, and generate evidence for release decisions. | EvaluationReport
+ScenarioPack
+ReplayDiff
+CandidateArtifact | No experiment ships directly to production. Every candidate must earn a canary through evaluation.
+Operations | Metrics Pipeline
+Log Pipeline
+Trace Pipeline
+Alert Manager
+Executive Dashboard | Observe latency, failures, cost, model usage, tool reliability, policy violations, and release health across all planes. | MetricsSeries
+StructuredLogs
+Trace spans
+SLO/SLA dashboards | Trace IDs must flow end-to-end. No unaudited tool call or unsigned deployment.

@@ -1,0 +1,557 @@
+
+=== SLIDE 1 ===
+
+
+
+
+Agent Studio
+
+Studio
+Runs
+Deploy
+Observe
+
+
+Lifecycle
+Brief → Design → Eval
+
+
+Design
+Architecture
+canvas
+
+
+AI guidance
+Insights
+panel
+
+
+Trust
+Evaluation & release gate
+
+Agent Architect Pro
+UI/UX wireframe deck
+A professional interaction model for an AI-native agent design and operations studio — built around the agent lifecycle rather than backend services.
+
+Goal-first
+
+Progressive disclosure
+
+Trust-centered
+
+Operational clarity
+
+Decision support
+
+Release-safe
+Deck contents
+North-star experience • Information architecture • Core screen wireframes • Evaluation and release patterns • Runtime and observability views • Design system cues
+Agent Architect Pro — UX wireframe direction
+1
+
+=== SLIDE 2 ===
+North-star product experience
+The platform should feel like one coherent studio that guides a user from fuzzy intent to safe deployment and continuous improvement.
+
+Primary framing: agent lifecycle
+
+
+1
+Brief
+Turn a goal into a structured agent brief
+
+
+
+2
+Design
+Generate and inspect architecture candidates
+
+
+
+3
+Compare
+Review tradeoffs, debate, and rationale
+
+
+
+4
+Evaluate
+See benchmark, scenario, and safety results
+
+
+
+5
+Approve
+Resolve risks before release
+
+
+
+6
+Deploy
+Canary, observe, and roll back safely
+
+
+
+7
+Improve
+Learn from runs, failures, and outcomes
+
+Who this serves
+
+
+Agent builders
+Guided creation, architecture confidence, and clear next steps.
+
+
+ML / platform
+Evaluation evidence, runtime visibility, and version control.
+
+
+Governance
+Approvals, policy, auditability, and release-safe visibility.
+
+
+Executives
+Portfolio outcomes, risk posture, and adoption signals.
+
+Design principle
+Every key screen should answer six questions: what this agent does, how it was designed, why the platform chose it, whether it is safe, what changed, and whether it is ready to deploy.
+
+Product stance
+Do not organize the user experience around backend nouns like Supervisor or Swarm. Those belong in diagnostics and audit views. The main UX should feel like an agent studio with clear lifecycle stages.
+Agent Architect Pro — UX wireframe direction
+2
+
+=== SLIDE 3 ===
+Global information architecture
+One platform, multiple role-centered modes. The app shell stays stable while the primary content shifts by workflow and permission level.
+
+Application shell
+
+
+
+Global command bar
+Search  •  Alerts  •  Profile
+
+Home
+
+Home
+Studio
+Runs
+Deploy
+Observe
+Govern
+Home dashboard
+Role-based view with progressive disclosure
+
+Primary navigation
+Home, Studio, Runs, Knowledge, Deployments, Observability, Governance, Executive, Settings.
+
+Agent-level navigation
+Overview, Brief, Design, Evaluation, Versions, Runtime, Audit. This keeps the lifecycle readable inside each agent.
+
+Role model
+Same system, different entry points: Studio for builders, Ops for runtime teams, Governance for risk and approvals, and Executive for portfolio visibility.
+Agent Architect Pro — UX wireframe direction
+3
+
+=== SLIDE 4 ===
+Wireframe 01 — Home dashboard
+The home view acts as a calm command center: recent work, active runs, approvals, deployment health, and risk alerts without overwhelming the user.
+
+
+
+Global command bar
+Search  •  Alerts  •  Profile
+
+Home
+
+Home
+Studio
+Runs
+Deploy
+Observe
+Govern
+Home dashboard
+Role-based view with progressive disclosure
+
+
+Recent agents
+Continue recent agent
+
+
+Operations
+Active runs
+
+
+Governance
+Pending approvals
+
+
+Executive summary
+Portfolio health + trend cards
+
+
+Attention queue
+Risk alerts
+Incidents
+Canary watch
+
+
+Knowledge
+Knowledge growth
+
+
+Quality
+Evaluation status
+
+
+Create next
+Quick actions / templates
+
+Why this layout works
+The top row supports resumption and urgency. The middle row supports portfolio awareness. The bottom row supports next actions.
+
+Default behavior
+Keep this page role-aware. A builder sees unfinished Studio work first. An operator sees incidents and live runs first. An executive sees portfolio outcomes first.
+
+Interaction pattern
+Every module should support a “summary → drill-down” path. No dense raw metrics by default. Let users escalate detail only when they need it.
+Agent Architect Pro — UX wireframe direction
+4
+
+=== SLIDE 5 ===
+Wireframe 02 — Agent Studio
+The Studio is the flagship workspace. It should feel like a guided professional environment for turning a brief into an evaluated, release-ready agent.
+
+
+
+Global command bar
+Search  •  Alerts  •  Profile
+
+Studio
+Home
+
+Studio
+Runs
+Deploy
+Observe
+Govern
+Agent Studio
+Role-based view with progressive disclosure
+
+
+Steps
+Brief
+
+Research
+
+Design
+
+Debate
+
+Memory
+
+Tools
+
+Eval
+
+Release
+
+
+Main workspace
+Architecture / brief / comparison canvas
+
+
+Insights
+AI suggestions
+Warnings
+Recommended next action
+
+
+Checks
+Validation status
+Open questions
+
+
+Context
+Selected tools
+Memory policy
+Risk level
+
+Brief mode
+
+Architecture mode
+
+Compare
+
+Why a three-panel layout
+Left = progress and orientation. Center = main artifact. Right = advice, risk, and next-step guidance. This is the most consistent pattern across the product.
+
+Key UX rule
+Do not reduce the Studio to a chat window. Users must be able to inspect architecture, memory, tools, and evaluation as first-class objects.
+
+Decision support
+Keep the right rail persistent. It should always expose AI suggestions, validation state, unresolved questions, and release readiness.
+Agent Architect Pro — UX wireframe direction
+5
+
+=== SLIDE 6 ===
+Wireframe 03 — Architecture compare
+Comparing candidates is a core product behavior. The UX should make tradeoffs visible: safety, quality, maintainability, latency, cost, and governance readiness.
+
+Candidate comparison
+
+Recommended: Candidate B
+
+Candidate A
+
+74 /100
+
+
+Structure
+Architecture summary
+
+
+Scores
+Safety • Cost • Latency • Quality
+
+
+Decision notes
+Key risks + assumptions
+
+Candidate B
+
+88 /100
+
+
+Structure
+Architecture summary
+
+
+Scores
+Safety • Cost • Latency • Quality
+
+
+Decision notes
+Key risks + assumptions
+
+Candidate C
+
+79 /100
+
+
+Structure
+Architecture summary
+
+
+Scores
+Safety • Cost • Latency • Quality
+
+
+Decision notes
+Key risks + assumptions
+
+
+Decision view
+Why B won
+Critic objections
+Rationale summary
+
+
+Tradeoff matrix
+A vs B vs C diff matrix
+
+Compare, don’t bury
+This screen should surface the tradeoff itself — not just declare a winner.
+
+Trust-building detail
+Every score should open the underlying rationale, evidence, and unresolved risk.
+
+Interaction model
+Let users select a winner, request a revision, merge traits, or send a candidate back to evaluation.
+Agent Architect Pro — UX wireframe direction
+6
+
+=== SLIDE 7 ===
+Wireframe 04 — Evaluation Lab
+Evaluation must be more than a pass/fail table. Users need a clear verdict, scenario coverage, clustered failures, and release recommendations.
+
+
+
+Global command bar
+Search  •  Alerts  •  Profile
+
+Studio
+Home
+
+Studio
+Runs
+Deploy
+Observe
+Govern
+Evaluation Lab
+Role-based view with progressive disclosure
+
+Verdict: revise
+
+
+Scorecards
+Overall quality
+Safety
+Reliability
+
+
+Coverage
+Scenario coverage
+Adversarial tests
+
+
+Decision
+Release recommendation
+
+
+Weakness map
+Failure heatmap / severity grid
+
+
+Patterns
+Top failure clusters
+
+
+Next actions
+Recommended remediations
+
+Three-layer review
+1) summary verdict, 2) grouped failures, 3) raw evidence. This keeps the screen useful for both executives and engineers.
+
+Release-safe behavior
+Never force a user to parse raw traces before understanding the headline. The recommendation block should state approve, revise, or block.
+
+Design detail
+Use color sparingly and semantically: green for verified, amber for caution, red for blocked or degraded.
+Agent Architect Pro — UX wireframe direction
+7
+
+=== SLIDE 8 ===
+Wireframe 05 — Release and runtime
+Design and operations meet here: a controlled release surface on the left and a live runtime overview on the right.
+
+Release Center
+
+
+What changed
+Version lineage + change summary
+
+
+Rollout
+Canary plan + target env
+
+
+Approval checklist
+Evaluation, policy, and unresolved risks
+
+
+Actions
+Rollback, freeze, or promote
+
+
+Governance
+Audit sign-off + stakeholders
+
+Runtime Overview
+
+
+Service health
+Health
+Latency
+Error rate
+
+
+Deployment
+Current env
+Version
+Traffic split
+
+
+Live activity
+Active runs timeline
+
+
+Behavior
+Top tool calls
+Model usage
+
+
+Attention
+Incidents
+Alerts
+Drill into traces
+
+Release surface
+Use the release view as a formal gate: what changed, what is still risky, who approved it, and how to roll back.
+
+Runtime surface
+Pair the release view with immediate operational visibility so a team can validate canaries and investigate degradation quickly.
+Agent Architect Pro — UX wireframe direction
+8
+
+=== SLIDE 9 ===
+Design system cues and next handoff
+A restrained enterprise visual language will make the platform feel more trustworthy, more premium, and easier to scale into Figma and engineering.
+
+Visual direction
+Tone
+• calm
+• precise
+• trustworthy
+• AI-native, not sci-fi
+
+Palette
+• slate / white neutrals
+• one strong indigo or blue accent
+• semantic green / amber / red
+
+Density
+• comfortable for Studio
+• compact for Ops
+
+Core components
+• app shell
+• command bar
+• step rail
+• comparison cards
+• score badges
+• evidence drawers
+• timeline modules
+• graph / architecture nodes
+• approval panels
+• status chips
+
+What comes next
+
+
+Decision gate
+Wireframe deck approved
+
+
+Design operations
+Figma-ready screen inventory
+(screen names, states, variants, annotations)
+
+
+Visual system
+High-fidelity UI system
+(tokens, components, flows, responsive rules)
+
+
+Validation
+Prototype + usability review plan
+
+Recommendation
+Approve this deck as the mid-fidelity UX direction, then move immediately into a Figma inventory before high-fidelity comps.
+
+Deliverable handoff
+Next artifact should enumerate every core screen, substate, modal, panel, and compare view needed for the product MVP.
+Agent Architect Pro — UX wireframe direction
+9

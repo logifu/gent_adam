@@ -1,0 +1,185 @@
+Agent Architect Pro — Component-by-Component Figma Library Brief
+Professional build brief for the design-system library that supports Studio, Evaluation, Deployment, Observability, and Governance workflows.
+
+1. Objective and design stance
+This brief defines the Figma library required to design Agent Architect Pro as a trustworthy enterprise product. The goal is not to create a visually impressive component dump. The goal is to build a systemized library that helps the team ship coherent screens for complex AI workflows, make governance visible, and reduce friction between product design, engineering, and future prototyping.
+• Design the library around product workflows, not backend service names.
+• Keep primitives universal, but create domain components where this platform truly needs them.
+• Bias toward components that support comparison, explainability, review, and approval.
+• Use a layered model: foundations → primitives → composites → domain modules → page patterns.
+• Treat accessibility, states, and handoff metadata as part of the component definition, not a later cleanup step.
+2. Recommended Figma file architecture
+
+
+3. Naming, structure, and variant rules
+• Use a consistent slash hierarchy: Category / Component / Variant / State. Example: Navigation / SideNav / Item / Active.
+• Separate visual size from semantic type. Example: Badge / Status / Medium and Badge / Metric / Medium should not be a single overloaded set.
+• Prefer boolean or enumerated properties over duplicate components. Typical properties: size, emphasis, state, icon-left, icon-right, density, has-helper, has-prefix, has-suffix.
+• Treat content slots explicitly in documentation: title, subtitle, metadata row, action row, footer, evidence chip group, right rail actions.
+• Use component descriptions in Figma to specify accessibility expectations, content limits, and intended use cases.
+4. Foundation layer
+
+5. Component library map
+The following categories are the recommended minimum component inventory for v1. They are organized from universal primitives to domain-specific modules.
+5.1 App shell and navigation
+These components give the product a stable frame. If this category is inconsistent, the whole platform will feel fragmented.
+
+5.2 Core actions and feedback
+These are standard UI primitives, but this product depends on strong state design because users make high-consequence decisions.
+
+5.3 Forms and input controls
+The platform needs guided intake and structured configuration, so forms must feel deliberate rather than generic.
+
+5.4 Content containers and data display
+This category supports dashboards, review screens, and dense information layouts.
+
+5.5 AI-native design and reasoning modules
+This is the category that differentiates Agent Architect Pro from a generic dashboard or cloud admin tool.
+
+5.6 Evaluation, release, and governance modules
+These modules support the trust layer of the product. They should feel formal, clear, and defensible.
+
+5.7 Deployment and runtime modules
+These modules let the product shift from design studio into operating system mode without changing visual language.
+
+5.8 Overlay and utility components
+These support usability, but they must not become the main way users understand the product.
+
+6. Pattern layer and screen recipes
+
+7. Build sequence for the Figma library
+• Phase 1 — Foundations: variables, typography, spacing, elevation, grid, icons, and semantic colors.
+• Phase 2 — Primitives: buttons, inputs, chips, badges, tabs, toggles, alert patterns, loaders, and tables.
+• Phase 3 — App shell: side nav, top bar, page header, command bar, filter bar, and right context panel.
+• Phase 4 — Domain modules: architecture card, comparison matrix, debate panel, evidence drawer, evaluation verdict, release diff, approval checklist.
+• Phase 5 — Patterns and screen recipes: Studio layout, compare workspace, review stack, ops dashboard, and executive dashboard compositions.
+• Phase 6 — Prototype blocks and QA: interactions, edge-case states, accessibility checks, and handoff annotations.
+
+8. Component documentation standard
+
+9. Quality gate for publishing library components
+• Every component must have idle, hover, focus, pressed, disabled, and loading/error states where applicable.
+• Every state change must preserve layout stability unless the pattern intentionally expands or collapses.
+• Components used in governance and deployment flows must support explicit status language and not rely on color alone.
+• Table, timeline, and audit components must be legible in compact density, because Ops use cases demand high information density.
+• Domain modules must include rationale and evidence affordances if they represent an AI-generated recommendation or verdict.
+• Before publishing, verify component naming, property cleanliness, auto layout, resizing logic, and consistent token usage.
+10. Final recommendation
+The strongest library strategy for Agent Architect Pro is a disciplined shared system with a small number of genuinely product-specific modules. The product should not be built entirely from generic SaaS components, because comparison, evidence, evaluation, approval, and runtime trust are central to the experience. At the same time, it should not become an undisciplined collection of one-off cards. A good Figma library here is opinionated, sparse where the product can stay standard, and highly intentional where AI governance and lifecycle workflows need custom interaction patterns.
+
+--- TABLE 1 ---
+Recommended library position: one shared design system with lifecycle-first product patterns. The library should serve the agent journey — Brief → Design → Compare → Evaluate → Approve → Deploy → Monitor → Improve — while staying disciplined enough for enterprise delivery.
+
+--- TABLE 2 ---
+Figma page | What lives there | Build rule
+00 Cover & README | File purpose, ownership, release notes, naming rules, and publishing instructions. | Keep non-design guidance here; do not mix with components.
+01 Foundations | Color variables, type scale, spacing, radius, shadows, elevation, motion, icon sizing, grid rules. | Variables first; no screen-specific hacks.
+02 Primitives | Buttons, inputs, chips, tags, avatars, dividers, pills, badges, toggles, tabs, tooltips, loaders. | Every primitive must support light/dark and interaction states.
+03 App Shell | Side nav, top bar, page headers, breadcrumbs, command bar, filter bar, right-side context panel. | Use auto layout and slot-based composition.
+04 Data & Content | Cards, tables, metric tiles, lists, timelines, accordions, empty states, banners, drawers, modals. | Create dense and comfortable modes where needed.
+05 Domain Modules | Architecture cards, debate panels, evaluation verdicts, release diff, trace evidence drawer, tool permission matrix, confidence meter. | This page makes the product feel bespoke.
+06 Patterns | Reusable screen sections and section recipes for Studio, Evaluation Lab, Release Center, Runtime Overview. | Document pattern intent and recommended usage.
+07 Prototype Blocks | Clickable flows, skeletons, and transition-ready frames used for prototyping. | Keep separate from published production components.
+
+--- TABLE 3 ---
+Publishing model: publish Foundations, Primitives, App Shell, Data & Content, and stable Domain Modules as the shared library. Keep Patterns and Prototype Blocks local to the product file until design and engineering agree they are reusable.
+
+--- TABLE 4 ---
+Foundation token group | What to define | Implementation guidance
+Color | Background, surface, border, text, icon, accent, success, warning, danger, info, selection, chart ramps. | Create semantic variables first, then alias raw palette values.
+Typography | Display, title, section, body, label, caption, code/data styles, numeric styles. | Define line heights and letter spacing alongside font size.
+Spacing | 4/8-based spacing scale, layout gaps, panel padding, table cell padding, modal padding. | Keep spacing predictable so auto layout remains stable.
+Corner radius | Small, medium, large, pill, overlay. | Use a restrained radius system; avoid ad hoc rounding.
+Elevation | Flat, raised, floating, overlay, focus ring. | Use shadows sparingly; rely on border and surface contrast too.
+Motion | Fast, standard, slow transitions and easing families. | Document use in prototype blocks, even if engineering tokens come later.
+Grid & breakpoints | Desktop max widths, two-column editor layout, right-rail widths, dense-table widths. | Optimize for desktop-first use with review-friendly tablet behavior.
+
+--- TABLE 5 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Side navigation | Primary product navigation with product-wide sections and optional team/workspace switcher. | Collapsed, expanded, active, hover, alert dot, with section label. | Build container + item + group subcomponents; support pinned and compact modes.
+Top bar | Global search, command entry, notifications, environment badge, user menu. | Default, search-open, alert-present, multi-workspace. | Keep left/right slots flexible so product can evolve.
+Page header | Context title, subtitle, breadcrumbs, status, primary actions. | Simple, with tabs, with environment switcher, with approval banner. | Use a slot architecture so screens do not fork the header design.
+Command bar | AI-native quick actions and navigation search. | Idle, focused, suggestion-open, loading, error, keyboard hint. | Must support long command strings and grouped suggestions.
+Right context panel | Persistent side panel for recommendations, evidence, warnings, and next actions. | Collapsed, open, tabbed, attention-required. | Use as a product pattern across Studio, Evaluation, and Governance.
+
+--- TABLE 6 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Button | Primary, secondary, tertiary, destructive, ghost, icon-only actions. | Sizes S/M/L; idle, hover, pressed, disabled, loading. | Create icon-left/right slots and progress-safe loading states.
+Status chip | Persistent lifecycle and health states such as Draft, Approved, Canary, Degraded. | Semantic types, with optional icon, compact/full, dismissible where allowed. | Do not overload generic tag styles for critical status meaning.
+Banner / inline alert | Prominent notices for blocking issues, warnings, success, info. | Inline, page-level, toast-safe, action-present. | Reserve stronger colors for true system or risk messages.
+Tooltip / helper text | Clarify advanced settings, scores, and evidence labels. | Short, rich, with link, with keyboard hint. | Avoid turning tooltips into long-form documentation.
+Progress / loader | Show long-running generation, evaluation, replay, and deployment tasks. | Indeterminate, determinate, step progress, skeleton state. | Design for both page-level and in-component loading.
+
+--- TABLE 7 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Text input | Brief titles, environment labels, names, short configuration values. | With label, helper, error, prefix, suffix, character count. | Support dense and regular heights; show focus strongly.
+Textarea / prompt editor | Long-form objectives, constraints, policy text, prompt fragments. | Default, autosize, code-style, error, diff-highlighted. | Use a monospace-ready mode for technical content.
+Select / combobox | Model choice, policy profile, environment, dataset, source selection. | Single, multi, searchable, grouped, async loading. | Use chips or tokens for multi-select; plan for long option lists.
+Segmented control / tabs | Switch views such as Summary, Rationale, Evidence or Metrics, Logs, Traces. | 2–6 options, icon optional, dense / regular. | Use where view changes are immediate and peer-level.
+Checkbox / radio / toggle | Approvals, permissions, feature flags, release checks. | Unchecked, checked, mixed, disabled, with description. | Ensure click targets and labels are generous.
+Date / range / number controls | Time filters, latency thresholds, budget caps, rollout percentages. | Single, range, stepper, slider-assisted. | These will matter heavily in Ops and Governance screens.
+
+--- TABLE 8 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Card | Flexible container for summaries, modules, metrics, and actions. | Basic, elevated, selectable, actionable, split, with footer. | Design a card shell with slots instead of many one-off cards.
+Metric tile | Key health and quality numbers for Home, Runtime, Executive, and Release. | Small, large, trend-up/down, loading, warning state. | Include sparkline and delta-ready variants.
+Table | Runs, deployments, alerts, audit logs, evaluation cases. | Comfortable, compact, sortable, selectable, sticky header, row action. | Create a table pattern with subcomponents for header cell, row, cell, toolbar.
+List row | Lighter-weight alternative to tables for recents, queue items, and evidence links. | With avatar/icon, metadata, status, selection. | Should share spacing logic with the table row.
+Accordion | Expandable detail sections in evaluation and governance flows. | Collapsed, open, nested, with count or severity badge. | Good for progressive disclosure of evidence.
+Timeline | Events for runs, deployments, debate rounds, and incident review. | Dense, narrative, grouped-by-day, status-marked. | Pair with evidence drawers and filters.
+Empty state | Zero-data guidance for new workspaces, missing results, and filtered-out states. | First-use, no-results, blocked-by-permission, error recovery. | Use action-led copy, not decorative illustration-heavy layouts.
+
+--- TABLE 9 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Architecture card | Represents one candidate architecture with summary, score, and rationale. | Selected, recommended, compared, risky, disabled. | Must support score bands, tags, and expandable assumptions.
+Comparison matrix | Structured side-by-side comparison of candidates or versions. | 2-column, 3-column, diff-highlighted, weighted-score view. | Prioritize readability over squeezing too many columns.
+Debate panel | Proposal, critique, revision, and decision summary lanes. | Collapsed summary, expanded round, evidence-linked. | Show structured reasoning; do not default to chat transcript styling.
+Confidence meter | Communicates confidence, uncertainty, and evidence sufficiency. | Low/medium/high; evidence-sparse; contradictory-evidence. | Keep interpretation clear and non-sensational.
+Evidence drawer | Shows retrieved sources, references, and trace-linked evidence for a decision. | Inline, side drawer, filtered, highlighted source. | Must support provenance metadata and copy/export actions.
+Recommendation panel | Next best action and release recommendation module. | Approve, revise, block, review-needed, monitor. | Use plain-English reasoning and explicit criteria.
+
+--- TABLE 10 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Evaluation verdict | Top-line result for benchmark and simulation outcomes. | Pass, caution, fail, blocked, rerun-needed. | Combine verdict, rationale, severity, and CTA.
+Scenario heatmap | Shows clusters of failures or weak performance areas. | Compact summary, detailed matrix, filtered by severity. | Keep labels legible; avoid visual noise.
+Release diff viewer | Summarizes what changed between candidate and baseline. | Prompt/tool/memory/policy/runtime tabs; summary-only mode. | Show risk-affecting changes first.
+Approval checklist | Tracks sign-off requirements before canary or release. | Unchecked, in-progress, completed, blocked. | Should integrate ownership, due date, and notes.
+Policy matrix | Shows allowed tools, permissions, and escalation rules. | Role-based, environment-based, change-tracked. | Make sensitive changes visually explicit.
+Audit event row | Represents one immutable event or review action. | Normal, warning, critical, linked-to-run. | Needs compact density and strong scanability.
+
+--- TABLE 11 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Environment switcher | Switches staging, canary, and production contexts. | Single-select, permission-limited, status-badged. | Must be visible and hard to misuse.
+Rollout progress | Shows canary percentage, healthy/degraded status, and rollout phase. | Linear, step-based, with rollback action. | Support longitudinal monitoring states.
+Runtime health card | Summarizes throughput, latency, errors, cost, and tool health. | Healthy, degraded, incident, loading. | Card should link into traces and detailed diagnostics.
+Incident summary | Compact issue module for runtime failures and risk events. | Open, acknowledged, mitigated, resolved. | Pair severity with ownership and timestamp.
+Trace waterfall | Visualizes step-by-step run timing and dependencies. | Collapsed summary, expanded technical view. | Can begin as a simplified pattern before full observability polish.
+
+--- TABLE 12 ---
+Component | Purpose | Required variants / states | Figma construction guidance
+Modal / side sheet | Confirmation, focused editing, approval, and detail views. | Small, medium, large, full-height side sheet. | Prefer side sheets for review-heavy workflows.
+Dropdown / context menu | Secondary actions, quick filters, row actions. | Standard, destructive item, grouped sections. | Use consistently; avoid burying core actions here.
+Popover | Contextual lightweight detail such as metric definition or source preview. | Info, action-enabled, hover-safe. | Do not overload with long-form content.
+Pagination / infinite load | Large result sets in logs, runs, and audit views. | Paged, load-more, cursor-based. | Choose one pattern per view family for consistency.
+Breadcrumbs | Product and in-agent navigation context. | Simple, truncated, action-embedded. | Use sparingly when titles alone do not orient the user.
+
+--- TABLE 13 ---
+Pattern | Used in | Recipe guidance
+Three-panel Studio layout | Brief Builder, Agent Studio, Memory/Tools config | Left rail for steps, center for primary artifact, right rail for suggestions and validation.
+Compare workspace | Architecture Comparison, version compare, canary compare | Top summary strip, center comparison columns, bottom diff details or evidence.
+Review stack | Evaluation Lab, Governance approval, incident review | Verdict header, grouped sections, expandable evidence, explicit next-step actions.
+Ops dashboard canvas | Runtime Overview, Deployments, Observability | Metric strip, dense data views below, persistent filters, drill-down-safe right drawer.
+Portfolio dashboard | Home, Executive | Cards and trends first, deep data second; plain-English labels always visible.
+
+--- TABLE 14 ---
+Do not start with bespoke screens. Start with the smallest stable building blocks that will appear across Home, Studio, Evaluation, Release, Runtime, and Governance. This prevents the library from becoming a screenshot archive instead of a real design system.
+
+--- TABLE 15 ---
+For every published component, document | Minimum expectation
+Purpose | One sentence describing why the component exists and where it should be used.
+Anatomy | Named parts and slots, with content limits when relevant.
+Variants and states | All supported properties, interaction states, disabled/loading/error states.
+Accessibility | Keyboard, focus, contrast, semantics, and touch/click target rules.
+Usage notes | Do / do not guidance and common anti-patterns.
+Prototype behavior | Expected click behavior, overlay pattern, and transition notes when relevant.
+Engineering handoff note | Important implementation details, responsive behavior, or token dependencies.

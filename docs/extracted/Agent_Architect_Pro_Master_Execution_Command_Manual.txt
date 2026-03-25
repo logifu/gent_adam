@@ -1,0 +1,115 @@
+Agent Architect Pro — Master Execution Command Manual
+Comprehensive command-and-instruction document for turning the architecture, UX, API contracts, and roadmap into executable team action.
+
+1. What this document is for
+This manual translates the project from reference artifacts into command-style execution. It is meant to remove ambiguity, shorten decision cycles, and prevent rework by making the order of operations explicit.
+• Treat the product as a lifecycle studio: Brief → Design → Compare → Evaluate → Approve → Deploy → Monitor → Improve.
+• Build the platform as six planes with clear interfaces: ingress/control, execution, knowledge, trust, improvement, and operations.
+• Freeze contracts early, keep the online path reliable, and gate every production step with evidence, approval, and observability.
+• Do not allow frontend, evaluation, or release work to outrun backend contracts and identity/audit foundations.
+
+2. Program operating model
+
+3. Command sequence by phase
+
+4. Command set A — Architecture and platform
+
+5. Command set B — Security, trust, and governance
+
+6. Command set C — Backend execution path
+
+7. Command set D — Knowledge and evaluation path
+
+8. Command set E — Product and UX delivery
+
+9. Role command matrix
+
+10. Review gates and stop conditions
+
+
+
+--- TABLE 1 ---
+Use this manual as the primary operating document for the build. It tells the team what to do first, what must never be skipped, what each role owns, and what outputs are required before the next phase can begin.
+
+--- TABLE 2 ---
+Non-negotiable execution rule
+If a task creates future ambiguity, replace it with a more explicit task. This project is too large for vague backlog items such as “build architecture” or “do observability later.” Every command should name owner, input, output, dependency, and exit criteria.
+
+--- TABLE 3 ---
+Layer | Operating instruction
+Product model | Always frame the experience and delivery around the lifecycle studio, not around backend nouns like Supervisor or Swarm.
+Architecture model | Keep orchestration, execution, retrieval, identity, audit, evaluation, and telemetry as distinct responsibilities even if code initially lives in one repository.
+Delivery model | Use 12 two-week sprints with quality gates at sprint 2, sprint 5, sprint 8, sprint 10, and sprint 12.
+Governance model | No candidate reaches production without evaluation evidence, signed artifacts, release controls, and required approvals.
+UX model | Use progressive disclosure: summary first, rationale second, evidence third, raw trace last.
+
+--- TABLE 4 ---
+Phase | Command objective | Do not advance until
+Phase 0 — Alignment | Lock scope, role model, architecture stance, and v1 boundaries. | The lifecycle scope, six-plane architecture, and deferred research features are explicitly accepted.
+Phase 1 — Foundations | Stand up repos, contracts, auth shell, observability bootstrap, and design system foundations. | Contracts, auth shell, telemetry bootstrap, and foundation design system are review-approved.
+Phase 2 — Vertical slice | Prove one end-to-end flow from intake to response with retrieval, model routing, and audit. | A single brief-to-run flow works end to end in staging-lite with traceability.
+Phase 3 — Product beta | Build Studio, Evaluation, Release, Runtime, and core governance UI against stable contracts. | Primary product workflow works in staging; no critical policy bypasses remain.
+Phase 4 — Production candidate | Harden release, canary, rollback, SLOs, alerts, and incident runbooks. | Canary and rollback are validated; production-readiness tests pass.
+Phase 5 — Launch & stabilize | Pilot, observe, correct defects, and freeze the phase-2 learning backlog. | Pilot metrics and operational guardrails are accepted by product, engineering, and governance.
+
+--- TABLE 5 ---
+Command | Name | Owner | Input | What to do | Exit criteria
+CMD-A01 | Freeze the online-path architecture | Chief architect | SRS + solution architecture | Publish a one-page architecture stance: keep the online path boring and reliable; move replay, simulation, architecture search, and advanced research loops into the offline improvement plane. | Signed architecture stance and ADR-001 approved.
+CMD-A02 | Define canonical contracts | Backend lead | SRS + API pack | Freeze RunSpec, PlanSpec, TaskSpec, TaskResult, EvaluationReport, AuditEvent, and common error envelopes as v1 contracts. | Contract package version 1.0 published; mock server generated.
+CMD-A03 | Create a modular monorepo | Platform engineering | Architecture stance | Set up repository layout for control plane, execution plane, knowledge plane, trust plane, improvement plane, operations tooling, and frontend app shell. | Repo structure, build tooling, and code ownership rules are live.
+CMD-A04 | Bootstrap environments | DevOps | Repo + stack choices | Provision local, integration, staging, and production environment definitions with secrets strategy and deployment templates. | Environment manifests exist and are testable.
+CMD-A05 | Make observability mandatory from day one | SRE | Contract IDs + environment bootstrap | Adopt shared trace_id, run_id, task_attempt_id, and workload identity conventions across all services and workers. | Logs, traces, and metrics can be correlated for one test request.
+
+--- TABLE 6 ---
+Command | Name | Owner | Input | What to do | Exit criteria
+CMD-B01 | Stand up human auth and RBAC | Security engineer | User roles + product scope | Implement SSO/OIDC, role mapping for builder/operator/governance/executive, and route protection rules. | Login, role claims, and permission checks work in non-prod.
+CMD-B02 | Stand up workload identity | Security engineer | Runtime design | Issue short-lived workload tokens for workers and tool access; never place long-lived credentials in workers. | Worker token issuance and expiry validation are demonstrated.
+CMD-B03 | Create the Tool Broker | Backend/platform | Execution plane design | Make every external tool call pass through a mediated broker with policy checks and audit hooks. | Blocked and successful tool calls both produce auditable records.
+CMD-B04 | Stand up append-only audit | Platform + security | AuditEvent contract | Implement append-only audit ingestion with searchable queries by run, version, actor, and action type. | Audit query works for a single vertical slice run.
+CMD-B05 | Define release approvals | Governance lead | Release flow + UX spec | Publish mandatory approval rules for staging promotion, canary start, production promotion, and rollback authority. | Release gate matrix is accepted and testable.
+
+--- TABLE 7 ---
+Command | Name | Owner | Input | What to do | Exit criteria
+CMD-C01 | Implement POST /v1/runs | Backend engineer | RunSpec contract | Build governed run creation with validation, idempotency, tenant context, and initial lifecycle state. | POST /v1/runs returns run_id and state; duplicate keys are handled correctly.
+CMD-C02 | Implement planning flow | Backend engineer | PlanSpec contract | Build Planner service and planning request path so a goal becomes a budgeted task DAG. | A validated plan is stored and exposed to the Supervisor.
+CMD-C03 | Implement task submission | Platform engineer | TaskSpec contract | Send runnable tasks from Supervisor to Swarm with retry and dependency handling. | Runnable tasks can be queued and correlated to the originating run.
+CMD-C04 | Implement runtime manager | Platform engineer | Execution plane design | Start, assign, heartbeat, and retire runtime instances through a controlled interface. | A runtime instance can be assigned work and report liveness.
+CMD-C05 | Implement result aggregation | Backend engineer | TaskResult contract | Normalize outputs, merge task results, and return them to Supervisor for final assembly. | A completed run shows final outputs, cost, and milestone summary.
+
+--- TABLE 8 ---
+Command | Name | Owner | Input | What to do | Exit criteria
+CMD-D01 | Implement retrieval API | ML/platform engineer | Retrieval contract | Build POST /v1/retrieve/search with scope, filters, top_k, and permission-aware results. | A request returns ranked documents, episodes, or artifacts with source ids.
+CMD-D02 | Stand up artifact catalog | Backend engineer | Knowledge plane design | Store manifests for packages, prompts, reports, and build outputs with lineage metadata. | Artifacts can be queried by run, candidate, or version.
+CMD-D03 | Stand up episodic memory foundation | ML engineer | Knowledge design | Persist reusable run summaries separately from transactional state. | Episode records can be written and searched without mutating source-of-truth state.
+CMD-D04 | Implement evaluation pipeline | ML engineer | EvaluationReport contract | Run benchmark packs, replay harnesses, and baseline-vs-candidate comparison reports. | EvaluationReport is produced for a candidate package with recommendation.
+CMD-D05 | Block release without evidence | Release manager owner | Release flow + EvaluationReport | Prevent promotion unless evaluation artifacts exist and required approval conditions are met. | A missing report hard-blocks release in staging.
+
+--- TABLE 9 ---
+Command | Name | Owner | Input | What to do | Exit criteria
+CMD-E01 | Build the shared shell first | Frontend lead | Figma build brief + library brief | Create app shell, top bar, side nav, status chips, banners, tables, timelines, diff blocks, and right context panel before screen assembly. | Foundations and global components are reviewed and reusable.
+CMD-E02 | Build Home and entry flow | Frontend engineer | Build brief phase 1–2 | Assemble Home dashboard, command palette, goal intake, and brief builder with real or mocked contracts. | Users can start a new agent and continue recent work.
+CMD-E03 | Build Studio core workflow | Frontend engineer | Studio core frames + contracts | Ship architecture comparison, architecture canvas, tools config, memory config, evaluation summary, and release readiness. | Primary builder workflow is clickable and testable end to end.
+CMD-E04 | Build runtime and release surfaces | Frontend engineer | Release/runtime frames + backend endpoints | Ship runs explorer, trace inspector, deployment center, canary monitor, version diff, and observability console. | Operators can inspect runs, compare versions, and review rollout health.
+CMD-E05 | Build governance and executive surfaces | Frontend engineer | Governance frames + approval APIs | Ship governance queue, approval packet, audit timeline, executive portfolio, and settings as secondary surfaces. | Governance decisions and executive visibility are usable without backend consoles.
+
+--- TABLE 10 ---
+Role | Daily command focus | What this role must never leave ambiguous
+Chief architect | Architecture stance, ADRs, cross-plane boundaries, milestone review gates. | Plane ownership, contract boundaries, and scope boundaries.
+Tech lead | Cross-team unblockers, code review patterns, acceptance criteria, sprint commitments. | Definition of done for stories and demos.
+Backend/platform | Contracts, lifecycle state, orchestration, runtime, policy hooks, audit event emission. | Undocumented fields or hidden state transitions.
+ML/platform | Retrieval, evaluation, model gateway, provider routing, replay, experiment evidence. | How evidence is produced and how offline evaluation stays off the hot path.
+Frontend/design | Lifecycle flows, component build order, right-rail guidance, compare/evidence/release interactions. | Screen dependencies, state variants, and empty/error behavior.
+SRE/DevOps | Environments, rollout, rollback, SLOs, alerts, runbooks, incident drills. | Operational ownership and promotion prerequisites.
+Governance/risk | Approval matrix, release evidence, audit review, policy exceptions, sign-off rules. | Who can approve what, and what evidence is mandatory.
+
+--- TABLE 11 ---
+Gate | Stop if this is missing
+Architecture gate | Contracts are undefined, plane ownership is disputed, or backend and frontend are designing against different mental models.
+Alpha gate | No single auditable vertical slice exists from run intake to final response.
+Beta gate | Product workflow works only with mocks, release controls are absent, or policy bypasses remain.
+Production-candidate gate | No tested canary/rollback path exists, no alerts are live, or no incident response playbook exists.
+Launch gate | Pilot users cannot complete the lifecycle through the product UI, or support/observability ownership is unclear.
+
+--- TABLE 12 ---
+How to use this manual weekly
+At the start of each sprint, convert every planned story into a command with owner, input, explicit output, dependency, and exit criteria. At the end of the sprint, review only against exit criteria — not against effort spent.

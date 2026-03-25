@@ -1,0 +1,160 @@
+Agent Architect Pro — Solution Architecture Document
+Chief Software Architect edition. Matching architecture guidance for the SRS, UI/UX spec, and phased delivery plan.
+
+1. Executive summary
+Agent Architect Pro should be implemented as a multi-plane platform rather than a single monolith. The recommended target shape is a layered, cloud-native architecture with a stable online request path, a governed offline evaluation path, and strong shared services for identity, retrieval, tooling, telemetry, and release management.
+
+2. Architectural goals
+• Support the full lifecycle: requirement intake, architecture generation, evaluation, deployment, monitoring, governance, and continuous improvement.
+• Provide deterministic, auditable, tenant-aware execution for production tasks.
+• Separate control-plane concerns from execution, knowledge, trust, improvement, and operations concerns.
+• Allow rapid iteration of agent logic without destabilizing runtime or release processes.
+• Standardize telemetry, identity, and artifact governance across every service boundary.
+3. Target architecture overview
+
+4. Service decomposition
+4.1 Control plane services
+
+4.2 Execution and knowledge services
+
+4.3 Trust, operations, and improvement services
+
+
+5. Canonical request flow
+
+6. Data architecture
+
+7. Security and governance architecture
+• Use OIDC/OAuth2 for user identity and short-lived JWTs for service-to-service and workload identity.
+• Store secrets outside application code and worker containers; retrieve them through Vault or cloud-native secret managers.
+• Enforce RBAC for operators, builders, reviewers, and executives, with explicit approval policies for release promotion and sensitive tool access.
+• Treat every tool call as a privileged action that is authorized, logged, and correlated to run_id, task_attempt_id, and runtime_instance_id.
+• Sign deployable artifacts and policy bundles; reject unsigned artifacts in the release pipeline.
+• Prefer append-only audit tables with hash chaining over mandatory blockchain dependencies in v1.
+8. Deployment topology
+
+9. Architecture decision log (condensed)
+
+10. Key risks and mitigations
+
+11. Exit criteria for architecture readiness
+• Core contracts are versioned: RunSpec, PlanSpec, TaskSpec, TaskResult, EvaluationReport, AuditEvent.
+• A single request can flow end-to-end from intake through planning, execution, tool mediation, retrieval, and response.
+• All tool calls and release actions are auditable and trace-linked.
+• The platform supports staged rollout with canary and rollback controls.
+• SLOs exist for API latency, task completion, evaluation throughput, and incident response.
+
+--- TABLE 1 ---
+Purpose: define the target operating model, service decomposition, data flow, deployment topology, security model, observability stack, and implementation decisions for the first production-ready version.
+
+--- TABLE 2 ---
+Architectural stance
+Keep the online path boring and reliable. Move experiment-heavy capabilities such as replay, architecture search, debate analysis, and simulation into a gated improvement plane. Use one controlled entry point for model access and one for tool access.
+
+--- TABLE 3 ---
+Plane | Core services | Primary responsibility | Key principle
+Ingress & Control | API Gateway
+Auth Service
+Supervisor
+Planner
+Release Manager | Accept authenticated requests, manage run state, compile task DAGs, enforce budgets, approvals, and release rules. | Goals and budgets enter here; no worker scheduling logic lives here.
+Execution | Swarm Orchestrator
+Runtime Manager
+Sandbox Executor
+Tool Broker
+Policy Enforcer
+Result Aggregator | Place tasks, start workers, execute work in sandboxed runtimes, mediate tool access, enforce policies, and merge outputs. | Every external action must be policy checked and audited.
+Knowledge | Retrieval Service
+Episodic Memory Service
+Artifact Catalog
+Vector Index
+Knowledge DB | Serve semantic retrieval, reusable run summaries, indexed assets, and authoritative stored state. | Do not conflate prompt context with system-of-record state.
+Trust | Identity Registry
+Token Service
+Audit Ledger
+Artifact Signer
+Secrets/Vault
+Policy Store | Issue short-lived identities, sign artifacts, manage secrets, and preserve tamper-evident audit chains. | Identity must be specific to version, run, and runtime instance.
+Improvement | Evaluation Service
+Simulation Service
+Replay Service
+Experimentation
+Meta-Learning | Test and compare candidates offline, generate evidence, and feed controlled optimization. | No experiment deploys directly to production.
+Operations | OpenTelemetry
+Prometheus
+Grafana
+Loki/Tempo
+Alert Manager
+Executive Dashboard | Collect metrics, logs, traces, alerts, SLOs, and portfolio health views. | All planes share correlation IDs for end-to-end tracing.
+
+--- TABLE 4 ---
+Service | Responsibilities | Interfaces | Recommended stack
+API Gateway | Authentication, authorization hand-off, rate limits, request validation, edge routing. | HTTPS, OpenAPI, JWT/OIDC validation. | Kong or NGINX Ingress + OAuth2/OIDC integration.
+Supervisor | Create run_id, maintain lifecycle state machine, apply budgets and deadlines, trigger planning and release checks. | REST/gRPC + Kafka events. | FastAPI service with Temporal client and PostgreSQL.
+Planner | Compile goals into a task DAG, return execution budgets, quality gates, and fallback plans. | REST/gRPC, model gateway calls. | FastAPI/Python service with Pydantic contracts.
+Release Manager | Promotion rules, canary approvals, rollback orchestration, signed release manifests. | REST + CI/CD webhooks. | FastAPI + Temporal + artifact registry integration.
+
+--- TABLE 5 ---
+Service | Responsibilities | Interfaces | Recommended stack
+Swarm Orchestrator | Queue runnable tasks, select workers, manage retries, concurrency, and backpressure. | Kafka topics, gRPC heartbeats. | Temporal activities + Kafka + Kubernetes worker queues.
+Runtime Manager | Start/stop workers, publish capacity, assign runtime_instance_id, track liveness. | gRPC heartbeats, K8s APIs. | Python or Go control service + Kubernetes API.
+Sandbox Executor | Isolate execution, control egress, enforce filesystem and CPU/memory limits. | Container runtime boundary. | Kubernetes, container policies, network policies, seccomp.
+Tool Broker | Central entry point for tool/API calls, credential brokering, logging, and policy gating. | REST/gRPC tool contracts. | FastAPI or Go service + Vault + audit hooks.
+Retrieval Service | Index, search, rerank, and package source evidence for tasks. | REST/gRPC search APIs. | PostgreSQL + pgvector + object storage + reranker model.
+Episodic Memory | Store summarized run outcomes and reusable traces. | REST/gRPC summary APIs. | PostgreSQL + object storage + background summarization jobs.
+
+--- TABLE 6 ---
+Service | Responsibilities | Interfaces | Recommended stack
+Identity Registry | Track agent specs, agent versions, runtime instances, and release lineage. | REST + SQL. | PostgreSQL with strict migration discipline.
+Token Service | Issue short-lived workload and tool-access tokens. | OIDC/OAuth2/JWT. | Keycloak or Auth0 + service mesh identity.
+Audit Ledger | Append-only evidence with hash chaining, searchable per run or artifact. | Event ingestion + query APIs. | PostgreSQL/ClickHouse + hash-chain jobs.
+Model Gateway | Unify model routing, batching, quotas, caching, and fallback behavior. | REST/gRPC inference envelope. | FastAPI/Go gateway with provider adapters.
+Evaluation/Replay | Run benchmarks, replay historical traffic, compare candidate vs baseline. | Batch jobs + report APIs. | Temporal + Kafka + object storage + analytics DB.
+Observability Stack | Ingest traces, metrics, and logs, alert on SLO violations, support incident drill-down. | OTLP + Prometheus scrapes. | OpenTelemetry + Prometheus + Grafana + Loki + Tempo.
+
+--- TABLE 7 ---
+Recommended core stack
+Frontend: Next.js + TypeScript + Tailwind + shadcn/ui. Control and platform APIs: FastAPI + Pydantic. Durable orchestration: Temporal. Event backbone: Kafka. Container orchestration: Kubernetes. Primary data: PostgreSQL. Vector retrieval: pgvector. Cache and rate controls: Redis. Telemetry: OpenTelemetry, Prometheus, Grafana, Loki, Tempo. Secrets and keys: Vault + KMS/HSM-backed signing.
+
+--- TABLE 8 ---
+Step | Sequence
+1 | API Gateway authenticates the caller and forwards an authorized run request.
+2 | Supervisor creates run_id, records initial state, and requests a plan from the Planner.
+3 | Planner compiles a PlanSpec with task DAG, budget, deadlines, and policy profile.
+4 | Supervisor submits runnable TaskSpec objects to the Swarm Orchestrator.
+5 | Swarm selects a worker; Runtime Manager starts or assigns a sandboxed runtime instance.
+6 | Runtime retrieves context from the Retrieval Service, calls the Model Gateway, and invokes tools only via the Tool Broker.
+7 | Policy Enforcer validates limits continuously; audit and telemetry events are emitted throughout.
+8 | Result Aggregator returns normalized results to the Supervisor for final assembly and response.
+
+--- TABLE 9 ---
+Data domain | Primary store | Why | Retention / notes
+Operational state | PostgreSQL | Strong transactional guarantees for runs, versions, tasks, and approvals. | System of record; schema migrations under Flyway/Alembic.
+Vectors and semantic retrieval | PostgreSQL + pgvector | Store embeddings alongside metadata and relational joins. | Use exact search initially; add ANN indexes as corpus grows.
+Artifacts and evidence | S3-compatible object storage | Binary artifacts, evaluation bundles, documents, exported reports. | Version every artifact and keep immutable release manifests.
+Caching and coordination | Redis | Fast reads for hot metadata, rate-limit counters, ephemeral locks. | No durable system-of-record data here.
+Analytics / audit search | ClickHouse or PostgreSQL partitioning | Fast aggregation for high-volume audit and observability summaries. | Can be deferred to phase 2 if volume is modest.
+
+--- TABLE 10 ---
+Environment | Purpose | Minimum contents | Promotion rule
+Local developer | Fast iteration and contract testing. | Docker Compose, mocked providers, ephemeral Postgres/Redis. | No production secrets or real approval flows.
+Shared integration | Contract, workflow, and UI integration testing. | Kubernetes namespace, seeded datasets, CI-triggered smoke tests. | Must pass integration and contract suites.
+Staging | Pre-production validation, replay, canary rehearsal. | Full platform stack, synthetic traffic, signed artifacts only. | Requires evaluation report and release approval.
+Production | Live tenant traffic and executive reporting. | Highly available control plane, autoscaled workers, observability, backup/restore. | Canary then progressive rollout with rollback window.
+
+--- TABLE 11 ---
+Decision | Choice | Why it fits this product
+API style | REST + event-driven async backbone | Good fit for product and admin surfaces while keeping long-running tasks off synchronous request paths.
+Workflow engine | Temporal | Durable orchestration is valuable for long-running, retry-heavy agent operations.
+Primary language | Python for AI/control services | Matches model ecosystem, typed APIs, and existing agent tooling.
+Event streaming | Kafka | Strong fit for swarm events, audit streams, and decoupled processing.
+Data strategy | PostgreSQL first | Keeps operational state and vector retrieval close together for v1 simplicity.
+Observability | OpenTelemetry-centric | Unifies traces, metrics, and logs across frontend, backend, and workers.
+
+--- TABLE 12 ---
+Risk | Impact | Mitigation
+Supervisor becomes a bottleneck | Run latency and failure handling degrade as orchestration logic grows. | Keep it stateful but thin; push scheduling to Swarm and workflows to Temporal.
+Too many online dependencies | Operational fragility and poor MTTR. | Keep the online path minimal and move improvement workloads offline.
+Tool misuse or secret leakage | Security and compliance exposure. | Centralize calls through Tool Broker and Vault-backed credentials.
+Observability blind spots | Hard to debug agent failures or cost spikes. | Adopt OpenTelemetry from sprint one and require shared correlation IDs.
+Premature microservice sprawl | Delivery slows before product value is proven. | Start with a modular monorepo and only split deployables where scaling or ownership requires it.

@@ -1,0 +1,232 @@
+Agent Architect Pro — Team-by-Team Implementation Pack
+Execution pack for Backend, Frontend, ML/AI, DevOps/SRE, and Governance/Security teams.
+
+1. How to use this pack
+• Use this document as the working operating brief for team leads and individual contributors.
+• Each team section defines ownership, deliverables, dependencies, cadence, and definition of done.
+• Treat this as the bridge between architecture documents and day-to-day execution.
+• Do not start work only from ideas; start from the assigned team charter and its first-30-days checklist.
+
+2. Cross-team operating model
+
+3. Shared rules for all teams
+• Every team must work from versioned contracts, not informal assumptions.
+• Every feature must emit usable telemetry: logs, traces, metrics, and contextual identifiers.
+• No team may introduce undocumented fields or hidden workflow branches into production paths.
+• Security and governance are not a final hardening step; they are part of feature completion.
+• Release readiness requires code, tests, docs, telemetry, and rollback understanding.
+4. Backend / Platform Team
+Mission: build and stabilize the core services that make the product operationally real — API gateway integration, supervisor, planner, swarm orchestration, runtime lifecycle, tool broker, model gateway, and release manager support.
+
+5. Frontend / Product Experience Team
+Mission: turn the platform into an understandable product using the lifecycle-first experience model — Home, Studio, Evaluation, Release, Runtime, Governance, and Executive surfaces.
+
+6. ML / AI Team
+Mission: own the intelligence plane — retrieval quality, model routing policy, candidate generation, evaluation harnesses, replay/simulation, and evidence packaging that makes the system trustworthy.
+
+7. DevOps / SRE Team
+Mission: make the platform deployable, observable, recoverable, and safe to operate through environments, pipelines, secrets, scaling, and incident response readiness.
+
+8. Governance / Security Team
+Mission: ensure identity, policy, approval, audit, and operational trust are built into the platform from the beginning and not treated as late-stage paperwork.
+
+9. Team handoff matrix
+
+10. Team-level review cadence
+• Daily: team standups focused on blockers, dependencies, and contract drift.
+• Twice weekly: cross-team integration sync involving Backend, Frontend, ML, DevOps, and Governance leads.
+• Weekly: architecture and product review focused on the current vertical slice.
+• Per sprint: demo, risk review, acceptance check, and next-sprint dependency confirmation.
+
+11. Team-by-team definition of done summary
+
+12. Final recommendation
+Use this implementation pack as the team-level command layer beneath the execution manuals. The manuals explain the project and the phase-by-phase sequence; this document tells each team exactly how to participate without ambiguity. If the project keeps these ownership boundaries and handoff rules intact, it will move faster and with far less rework.
+
+--- TABLE 1 ---
+Purpose: convert the architecture, roadmap, API contract pack, UX plan, and execution manuals into clear team ownership, work instructions, handoffs, and delivery expectations.
+
+--- TABLE 2 ---
+Operating principle
+This project should not be executed as one giant undifferentiated engineering stream. Each team must own a bounded slice of the system, but all teams must align on shared contracts, telemetry, release gates, and governance requirements.
+
+--- TABLE 3 ---
+Layer | Primary owner | Secondary owners | Critical artifact
+Control plane | Backend / Platform | Frontend, Governance | Run and plan contracts
+Execution plane | Backend / Platform | DevOps, ML | Task execution and tool mediation contracts
+Knowledge plane | ML / AI | Backend, Frontend | Retrieval schemas and evidence payloads
+Release and environments | DevOps / SRE | Backend, Governance | Signed artifacts and rollout pipeline
+Governance and approvals | Governance / Security | Frontend, Backend | Approval packet and policy rules
+Product experience | Frontend / Product Design | All teams | Lifecycle-driven screens and UX states
+
+--- TABLE 4 ---
+Area | Details
+Owns | Supervisor service
+Planner service
+Swarm orchestrator
+Runtime manager
+Tool broker
+Model gateway
+Result aggregation
+Core contracts and persistence models
+Must deliver | Production-grade service skeletons
+Versioned API contracts
+Task lifecycle implementation
+Policy-aware tool execution
+Audit and telemetry integration
+Readme + runbook for every service
+Depends on | Identity/token services from Governance/Security
+Cluster/runtime controls from DevOps
+Retrieval and evaluation payloads from ML
+UI contract expectations from Frontend
+Cadence | Daily: standup + blockers review
+Twice weekly: contract sync with Frontend and ML
+Weekly: integration demo and telemetry review
+Per sprint: architecture review and backlog refinement
+Definition of done | A backend feature is done only when the API/worker path is implemented, tested, observable, documented, and wired to policy and audit behavior.
+First 30 days command list | Week 1: freeze core contracts for RunSpec, PlanSpec, TaskSpec, TaskResult, EvaluationReport.
+Week 2: scaffold Supervisor, Planner, Tool Broker, Model Gateway.
+Week 3: wire tracing + audit metadata into every service.
+Week 4: deliver first vertical slice from run creation to task completion.
+
+--- TABLE 5 ---
+Area | Details
+Owns | App shell
+Design system implementation
+Home Dashboard
+Brief Builder
+Architecture Comparison
+Evaluation Lab
+Release Center
+Runtime Overview
+Governance views
+Executive views
+Must deliver | Frame-accurate UI implementation
+Componentized frontend code
+State coverage (default/loading/empty/error/restricted)
+API integration against documented contracts
+Design system usage documentation
+Depends on | Stable backend contract schemas
+Product/design direction
+Governance review criteria
+Observability event fields for UI drill-down
+Cadence | Daily: standup + design/engineering sync
+Twice weekly: API alignment review
+Weekly: usability and interaction review
+Per sprint: clickable prototype or integrated demo
+Definition of done | A frontend feature is done only when the screen flow works end-to-end, uses approved components, handles critical states, and does not depend on undocumented backend behavior.
+First 30 days command list | Week 1: implement app shell, navigation, and layout tokens.
+Week 2: ship Home and Studio skeletons against mocked APIs.
+Week 3: implement Brief Builder and Architecture Comparison.
+Week 4: integrate first real backend vertical slice and prove end-to-end UI flow.
+
+--- TABLE 6 ---
+Area | Details
+Owns | Retrieval service quality
+Reranking and grounding
+Model policy and route profiles
+Evaluation harnesses
+Replay and simulation inputs
+Episode summarization
+Evidence packaging for decisions
+Must deliver | Retrieval schemas and ranking logic
+Model task_type policy definitions
+Benchmark packs
+Scenario simulation suites
+EvaluationReport generation
+Quality dashboards for model/tool decisions
+Depends on | Runtime hooks from Backend
+Telemetry from DevOps/SRE
+Approval criteria from Governance
+UI presentation needs from Frontend
+Cadence | Daily: standup + data/quality issue review
+Twice weekly: evaluation sync with Backend and Governance
+Weekly: benchmark review and regression analysis
+Per sprint: release evidence report
+Definition of done | An ML feature is done only when its outputs are measurable, reproducible, integrated into evaluation, and explainable through evidence surfaced to product and governance layers.
+First 30 days command list | Week 1: define benchmark categories and evidence schema.
+Week 2: stand up retrieval indexing and relevance baselines.
+Week 3: implement first evaluation harness with pass/caution/fail outcomes.
+Week 4: attach evaluation outputs to release candidate packets.
+
+--- TABLE 7 ---
+Area | Details
+Owns | Infrastructure as code
+Kubernetes environments
+CI/CD + GitOps
+Secrets and key management
+Observability stack
+SLOs and alerting
+Canary + rollback automation
+Backups and recovery
+Must deliver | Working dev/staging/prod topology
+Pipeline templates
+Release automation
+Dashboards + alerts
+Runbooks
+Capacity and scaling guidance
+Disaster recovery procedures
+Depends on | Signed artifacts from Backend
+Policy constraints from Governance
+Service instrumentation from all engineering teams
+Production usage expectations from Product leadership
+Cadence | Daily: platform health check
+Twice weekly: release readiness review
+Weekly: incident drill or reliability review
+Per sprint: environment demo and SLO status
+Definition of done | DevOps work is done only when environments are reproducible, services are observable, deployment rollback is proven, and operational docs are complete enough for incident use.
+First 30 days command list | Week 1: bootstrap environments and deployment pipeline skeleton.
+Week 2: wire secrets, telemetry collectors, and baseline dashboards.
+Week 3: automate service deployment and environment promotion.
+Week 4: prove rollback and alert flow using a controlled failure rehearsal.
+
+--- TABLE 8 ---
+Area | Details
+Owns | OIDC/RBAC requirements
+Workload identity
+Policy store and rule model
+Approval workflows
+Audit evidence model
+Release sign-off rules
+Security review and threat modeling
+Compliance-adjacent controls
+Must deliver | Policy matrix
+Approval packet schema
+Audit event requirements
+Threat model and control register
+Release sign-off checklist
+Restricted action inventory
+Data handling guidelines
+Depends on | Service and UI contract details from Backend/Frontend
+Environment and secret controls from DevOps
+Evaluation evidence from ML
+Cadence | Daily: risk and blocker triage
+Twice weekly: policy and approval sync with Backend + Product
+Weekly: threat/risk review
+Per sprint: control verification and release-readiness sign-off
+Definition of done | Governance work is done only when a control exists in documented policy, is implemented in the product or platform, is testable, and leaves audit evidence when exercised.
+First 30 days command list | Week 1: define actor roles, approval boundaries, and restricted actions.
+Week 2: finalize token and policy rules for privileged services.
+Week 3: define the approval packet and audit evidence schema.
+Week 4: complete first threat model review and map mitigation tasks into the backlog.
+
+--- TABLE 9 ---
+From team | To team | Handoff item | Rule
+Backend | Frontend | OpenAPI / contract schema + mock examples | Frontend builds against documented payloads only.
+ML / AI | Frontend | Evaluation and evidence payload definitions | UI summaries must reflect measurable evidence fields.
+Governance | Backend | Policy and approval rules | Rules must be executable, not prose-only.
+DevOps | Backend + Frontend | Environment URLs, secrets path, deployment and observability conventions | No silent environment assumptions inside app code.
+Backend | DevOps | Service runtime requirements | CPU/memory, ports, probes, and scaling behavior must be documented before deployment.
+All teams | Governance | Release candidate packet | No production release without a complete approval packet.
+
+--- TABLE 10 ---
+Best execution rule
+Do not let teams operate as parallel silos. This project only moves quickly when contracts, telemetry, release controls, and evidence are shared operating mechanisms across every team.
+
+--- TABLE 11 ---
+Team | Done means…
+Backend / Platform | Code merged, contracts stable, tests passing, telemetry present, audit/path behavior documented.
+Frontend / Product | Integrated screens work against documented contracts, support required states, and follow design system rules.
+ML / AI | Outputs are benchmarked, explainable, and linked to evaluation evidence or retrieval provenance.
+DevOps / SRE | Deployments are reproducible, rollback is proven, alerts work, and operational runbooks exist.
+Governance / Security | Control requirements are encoded, testable, and visible in policy, approval, and audit layers.
